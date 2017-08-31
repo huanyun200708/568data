@@ -47,7 +47,6 @@ public class GetOpenId extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	/**

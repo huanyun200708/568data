@@ -30,27 +30,23 @@
   
   <servlet>
   	<servlet-name>Xiadan</servlet-name>
-  	<display-name>Xiadan</display-name>
-  	<description></description>
   	<servlet-class>com.weixinpay.Xiadan</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Sign</servlet-name>
-  	<display-name>Sign</display-name>
-  	<description></description>
   	<servlet-class>com.weixinpay.Sign</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>PayResult</servlet-name>
-  	<display-name>PayResult</display-name>
-  	<description></description>
   	<servlet-class>com.weixinpay.PayResult</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>GetOpenId</servlet-name>
-  	<display-name>GetOpenId</display-name>
-  	<description></description>
   	<servlet-class>com.weixinpay.GetOpenId</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>PostcodeQuery</servlet-name>
+  	<servlet-class>com.weixinpay.PostcodeQuery</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>Xiadan</servlet-name>
@@ -67,5 +63,9 @@
   <servlet-mapping>
   	<servlet-name>GetOpenId</servlet-name>
   	<url-pattern>/GetOpenId</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>PostcodeQuery</servlet-name>
+  	<url-pattern>/PostcodeQuery</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -21,13 +21,13 @@ import com.weixinpay.common.Configure;
 /**
  * Servlet implementation class GetOpenId
  */
-public class PostcodeQuery extends HttpServlet {
+public class DataQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PostcodeQuery() {
+    public DataQuery() {
         super();
     }
 

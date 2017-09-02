@@ -21,23 +21,34 @@ import com.weixinpay.common.Configure;
 /**
  * Servlet implementation class GetOpenId
  */
-public class DataQuery extends HttpServlet {
+public class ChuXianJiLuQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public DataQuery() {
+    public ChuXianJiLuQuery() {
         super();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 * postcode=215001&key=申请的KEY
+	 * 	名称			类型		必填	说明
+ 	 *	key			String	是	您申请的key
+ 	 *	licenseNo	string	否	车牌号码（车牌号、车架号至少传一项）
+ 	 *	frameNo		string	否	车架号（车牌号、车架号至少传一项）
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String code = request.getParameter("code");
-		String url = QueryAppKeyLib.postcodeQueryUrl+"postcode=215001&key="+QueryAppKeyLib.postcodeQueryAppKey;
+		
+		String useAppId = request.getParameter("useAppId");
+		String licenseNo = request.getParameter("licenseNo");
+		String frameNo = request.getParameter("frameNo");
+		
+		/*******查询用户是否支付成功，成功后才进行查询*******/
+		
+		/*******查询用户是否支付成功，成功后才进行查询*******/
+		
+		String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.chuxianjiluQueryAppKey+"&licenseNo"+licenseNo+"&frameNo"+frameNo;
 		HttpGet httpGet = new HttpGet(url);
         //设置请求器的配置
 		try {

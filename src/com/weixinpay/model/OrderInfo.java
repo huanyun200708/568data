@@ -19,6 +19,10 @@ public class OrderInfo {
 	private String notify_url;// 通知地址
 	private String trade_type;// 交易类型
 	private String openid;//用户标识	
+	
+	private String userid;
+	private String title;
+	private String queryType;
 
 	public String getSign_type() {
 		return sign_type;
@@ -116,4 +120,29 @@ public class OrderInfo {
 		this.trade_type = trade_type;
 	}
 
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getQueryType() {
+		return queryType;
+	}
+
+	public void setQueryType(String queryType) {
+		this.queryType = queryType;
+	}
+
+	
 }

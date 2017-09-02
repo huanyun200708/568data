@@ -33,11 +33,9 @@ public class GetOpenId extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/*Protocol myhttps = new Protocol("https", new MySecureProtocolSocketFactory (), 443);
-		Protocol.registerProtocol("https ", myhttps);*/
 		String code = request.getParameter("code");
-		HttpGet httpGet = new HttpGet("https://api.weixin.qq.com/sns/jscode2session?appid="+Configure.getAppID()+"&secret="+Configure.getSecret()+"&js_code="+code+"&grant_type=authorization_code");
-        //设置请求器的配置
+		String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+Configure.getAppID()+"&secret="+Configure.getSecret()+"&js_code="+code+"&grant_type=authorization_code";
+		HttpGet httpGet = new HttpGet(url);
 		try {
 			HttpClient httpClient = SSLUtil.getHttpClient();
 	        HttpResponse res = httpClient.execute(httpGet);

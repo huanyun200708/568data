@@ -27,7 +27,7 @@ import com.weixinpay.model.OrderReturnInfo;
  */
 public class Xiadan extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger L = Logger.getLogger(Xiadan.class);
+	private static final Logger log = Logger.getLogger(Xiadan.class);
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -48,6 +48,7 @@ public class Xiadan extends HttpServlet {
 			order.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
 			order.setBody("dfdfdf");
 			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
+			//设置价格
 			order.setTotal_fee(1);
 			order.setSpbill_create_ip("123.57.218.54");
 			order.setNotify_url("https://www.see-source.com/weixinpay/PayResult");
@@ -58,21 +59,18 @@ public class Xiadan extends HttpServlet {
 			String sign = Signature.getSign(order);
 			order.setSign(sign);
 			
-/*			Protocol myhttps = new Protocol("https", new MySecureProtocolSocketFactory (), 443);
-			Protocol.registerProtocol("https ", myhttps);*/
 			String result = HttpRequest.sendPost("https://api.mch.weixin.qq.com/pay/unifiedorder", order);
 			System.out.println(result);
-			L.info("---------下单返回:"+result);
+			log.info("---------下单返回:"+result);
 			XStream xStream = new XStream(new DomDriver());
 			xStream.alias("xml", OrderReturnInfo.class); 
-
 			OrderReturnInfo returnInfo = (OrderReturnInfo)xStream.fromXML(result);
 			JSONObject json = new JSONObject();
 			json.put("prepay_id", returnInfo.getPrepay_id());
 			response.getWriter().append(json.toJSONString());
 		} catch (Exception e) {
 			e.printStackTrace();
-			L.error("-------", e);
+			log.error("-------", e);
 		}
 		
 	}

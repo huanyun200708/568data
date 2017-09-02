@@ -45,9 +45,38 @@
   	<servlet-class>com.weixinpay.GetOpenId</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>PostcodeQuery</servlet-name>
-  	<servlet-class>com.weixinpay.PostcodeQuery</servlet-class>
+  	<servlet-name>BaoyangJiLuQuery</servlet-name>
+  	<servlet-class>com.weixinpay.BaoyangJiLuQuery</servlet-class>
   </servlet>
+   <servlet>
+  	<servlet-name>CheLiangZhuangTaiQuery</servlet-name>
+  	<servlet-class>com.weixinpay.CheLiangZhuangTaiQuery</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>ChuXianJiLuQuery</servlet-name>
+  	<servlet-class>com.weixinpay.ChuXianJiLuQuery</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>TouBaoXinXiQuery</servlet-name>
+  	<servlet-class>com.weixinpay.TouBaoXinXiQuery</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>PayOff</servlet-name>
+  	<servlet-class>com.weixinpay.PayOff</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>PaySuccess</servlet-name>
+  	<servlet-class>com.weixinpay.PaySuccess</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>PaySuccess</servlet-name>
+  	<url-pattern>/PaySuccess</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>PayOff</servlet-name>
+  	<url-pattern>/PayOff</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>Xiadan</servlet-name>
   	<url-pattern>/xiadan</url-pattern>
@@ -65,7 +94,19 @@
   	<url-pattern>/GetOpenId</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>PostcodeQuery</servlet-name>
-  	<url-pattern>/PostcodeQuery</url-pattern>
+  	<servlet-name>BaoyangJiLuQuery</servlet-name>
+  	<url-pattern>/BaoyangJiLuQuery</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>CheLiangZhuangTaiQuery</servlet-name>
+  	<url-pattern>/CheLiangZhuangTaiQuery</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ChuXianJiLuQuery</servlet-name>
+  	<url-pattern>/ChuXianJiLuQuery</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>TouBaoXinXiQuery</servlet-name>
+  	<url-pattern>/TouBaoXinXiQuery</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.com.hq.util.PropertiesUtils;
 import cn.com.hq.util.SSLUtil;
 
 import com.alibaba.fastjson.JSONObject;
@@ -44,15 +45,23 @@ public class PayOff extends HttpServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @param payType:
+	 * 			GJHY : 高级会员
+	 * 			ZJHY : 中级会员
+	 * 			CLZT : 车辆状态
+	 * 			BYJL : 保养记录
+	 * 			CXJL : 出险记录
+	 * 			TBXX : 投保信息
+	 * 
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String code = request.getParameter("code");
-		String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+Configure.getAppID()+"&secret="+Configure.getSecret()+"&js_code="+code+"&grant_type=authorization_code";
-		HttpGet httpGet = new HttpGet(url);
+		String payType = request.getParameter("payType");
 		try {
 			/*********获取用户openid开始***************/
 			System.out.println("获取用户openid开始");
+			String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+Configure.getAppID()+"&secret="+Configure.getSecret()+"&js_code="+code+"&grant_type=authorization_code";
+			HttpGet httpGet = new HttpGet(url);
 			HttpClient httpClient = SSLUtil.getHttpClient();
 	        HttpResponse res = httpClient.execute(httpGet);
 	        HttpEntity entity = res.getEntity();
@@ -70,17 +79,72 @@ public class PayOff extends HttpServlet {
 			order.setAppid(Configure.getAppID());
 			order.setMch_id(Configure.getMch_id());
 			order.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
-			order.setBody("dfdfdf");
+			int memberLevel = payService.memberLevel(openid);
+			if("GJHY".equals(payType)){
+				order.setBody("Be senior member");
+				String beHighMemberPrice = PropertiesUtils.getPropertyValueByKey("beHighMemberPrice");
+				order.setTotal_fee(Integer.valueOf(beHighMemberPrice));//设置价格
+			}else if("ZJHY".equals(payType)){
+				order.setBody("Be intermediate Member");
+				String beMiddleMemberPrice = PropertiesUtils.getPropertyValueByKey("beMiddleMemberPrice");
+				order.setTotal_fee(Integer.valueOf(beMiddleMemberPrice));//设置价格
+			}else if("CLZT".equals(payType)){
+				order.setBody("Vehicle status query");
+				if(memberLevel==0){
+					String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
+					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
+				}else if(memberLevel==1){
+					String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
+					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
+				}else if(memberLevel==2){
+					String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
+					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
+				}
+			}else if("BYJL".equals(payType)){
+				order.setBody("Vehicle maintenance record query");
+				if(memberLevel==0){
+					String cheliangbaoyangQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_normal");
+					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_normal));//设置价格
+				}else if(memberLevel==1){
+					String cheliangbaoyangQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_middle");
+					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_middle));//设置价格
+				}else if(memberLevel==2){
+					String cheliangbaoyangQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_high");
+					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_high));//设置价格
+				}
+			}else if("CXJL".equals(payType)){
+				order.setBody("The vehicle accident records query");
+				if(memberLevel==0){
+					String chuxianjiluQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_normal");
+					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_normal));//设置价格
+				}else if(memberLevel==1){
+					String chuxianjiluQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_middle");
+					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_middle));//设置价格
+				}else if(memberLevel==2){
+					String chuxianjiluQueryPrice_high = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_high");
+					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_high));//设置价格
+				}
+			}else if("TBXX".equals(payType)){
+				order.setBody("Vehicle insurance information query");
+				if(memberLevel==0){
+					String toubaoxinxiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_normal");
+					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_normal));//设置价格
+				}else if(memberLevel==1){
+					String toubaoxinxiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_middle");
+					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_middle));//设置价格
+				}else if(memberLevel==2){
+					String toubaoxinxiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_high");
+					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_high));//设置价格
+				}
+			}
+			
 			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
-			//设置价格
-			order.setTotal_fee(1);
 			order.setSpbill_create_ip("123.57.218.54");
 			order.setNotify_url("https://www.see-source.com/weixinpay/PayResult");
 			order.setTrade_type("JSAPI");
 			order.setOpenid(openid);
 			order.setSign_type("MD5");
-			//生成签名
-			String sign = Signature.getSign(order);
+			String sign = Signature.getSign(order);//生成签名
 			order.setSign(sign);
 			result = HttpRequest.sendPost("https://api.mch.weixin.qq.com/pay/unifiedorder", order);
 			System.out.println("---------下单返回:"+result);

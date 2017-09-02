@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
+import cn.com.hq.util.StringUtil;
 
 import com.weixinpay.common.Configure;
 import com.weixinpay.service.PayService;
@@ -54,6 +55,9 @@ public class BaoyangJiLuQuery extends HttpServlet {
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
 			String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&licenseNo"+vin;
+			if(!StringUtil.isEmpty(engine_number)){
+				url = url+"&engine_number="+engine_number;
+			}
 			HttpGet httpGet = new HttpGet(url);
 	        //设置请求器的配置
 			try {

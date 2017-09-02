@@ -15,8 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
+import cn.com.hq.util.StringUtil;
 
-import com.weixinpay.common.Configure;
+import com.weixinpay.service.PayService;
 
 /**
  * Servlet implementation class GetOpenId
@@ -24,13 +25,10 @@ import com.weixinpay.common.Configure;
 public class ChuXianJiLuQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
+	private PayService payService = new PayService();
     public ChuXianJiLuQuery() {
         super();
     }
-
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 * 	名称			类型		必填	说明
@@ -40,26 +38,34 @@ public class ChuXianJiLuQuery extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String useAppId = request.getParameter("useAppId");
 		String licenseNo = request.getParameter("licenseNo");
 		String frameNo = request.getParameter("frameNo");
-		
+		String orderId = request.getParameter("orderId");
 		/*******查询用户是否支付成功，成功后才进行查询*******/
-		
+		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
-		
-		String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.chuxianjiluQueryAppKey+"&licenseNo"+licenseNo+"&frameNo"+frameNo;
-		HttpGet httpGet = new HttpGet(url);
-        //设置请求器的配置
-		try {
-			HttpClient httpClient = SSLUtil.getHttpClient();
-	        HttpResponse res = httpClient.execute(httpGet);
-	        HttpEntity entity = res.getEntity();
-	        String result = EntityUtils.toString(entity, "UTF-8");
-	        System.out.println(result);
-	        response.getWriter().append(result);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(isOrderFirstQuery){
+			String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.chuxianjiluQueryAppKey;
+			if(!StringUtil.isEmpty(licenseNo)){
+				url = url+"&licenseNo="+licenseNo;
+			}
+			if(!StringUtil.isEmpty(frameNo)){
+				url = url+"&frameNo"+frameNo;
+			}
+			HttpGet httpGet = new HttpGet(url);
+	        //设置请求器的配置
+			try {
+				HttpClient httpClient = SSLUtil.getHttpClient();
+		        HttpResponse res = httpClient.execute(httpGet);
+		        HttpEntity entity = res.getEntity();
+		        String result = EntityUtils.toString(entity, "UTF-8");
+		        System.out.println(result);
+		        response.getWriter().append(result);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			response.getWriter().append("\"error\":\"has queried\"");
 		}
 	}
 

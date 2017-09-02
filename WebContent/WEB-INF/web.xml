@@ -68,6 +68,10 @@
   	<servlet-name>PaySuccess</servlet-name>
   	<servlet-class>com.weixinpay.PaySuccess</servlet-class>
   </servlet>
+    <servlet>
+  	<servlet-name>BeHighMember</servlet-name>
+  	<servlet-class>com.weixinpay.BeHighMember</servlet-class>
+  </servlet>
   
   <servlet-mapping>
   	<servlet-name>PaySuccess</servlet-name>
@@ -108,5 +112,9 @@
   <servlet-mapping>
   	<servlet-name>TouBaoXinXiQuery</servlet-name>
   	<url-pattern>/TouBaoXinXiQuery</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  	<servlet-name>BeHighMember</servlet-name>
+  	<url-pattern>/BeHighMember</url-pattern>
   </servlet-mapping>
 </web-app>

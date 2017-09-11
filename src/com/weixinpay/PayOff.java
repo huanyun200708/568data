@@ -1,6 +1,7 @@
 package com.weixinpay;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.com.hq.util.PropertiesUtils;
+import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
+import cn.com.hq.util.StringUtil;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
@@ -25,11 +28,16 @@ import com.weixinpay.common.Configure;
 import com.weixinpay.common.HttpRequest;
 import com.weixinpay.common.RandomStringGenerator;
 import com.weixinpay.common.Signature;
+import com.weixinpay.model.CLZT;
+import com.weixinpay.model.CXJL;
 import com.weixinpay.model.OrderInfo;
 import com.weixinpay.model.OrderReturnInfo;
 import com.weixinpay.model.SignInfo;
+import com.weixinpay.model.TBXX;
+import com.weixinpay.model.TBXXUserInfo;
 import com.weixinpay.model.WXUser;
 import com.weixinpay.service.PayService;
+import com.weixinpay.test.Data;
 
 /**
  * Servlet implementation class GetOpenId
@@ -57,6 +65,10 @@ public class PayOff extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String code = request.getParameter("code");
 		String payType = request.getParameter("payType");
+System.out.println("code : "+code + "----payType : "+payType);
+		String queryResult = "";
+		 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+	       
 		try {
 			/*********获取用户openid开始***************/
 			System.out.println("获取用户openid开始");
@@ -67,11 +79,9 @@ public class PayOff extends HttpServlet {
 	        HttpEntity entity = res.getEntity();
 	        String result = EntityUtils.toString(entity, "UTF-8");
 	        System.out.println("userInfo : " + result);
-	        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
-	        WXUser u = gson.fromJson(result, WXUser.class);
 	        System.out.println("获取用户openid结束");
 	        /*********获取用户openid结束***************/
-	        
+	        WXUser u = gson.fromJson(result, WXUser.class);
 	        /*********生成订单开始***************/
 	        System.out.println("生成订单开始");
 	        String openid = u.getOpenid();
@@ -80,6 +90,7 @@ public class PayOff extends HttpServlet {
 			order.setMch_id(Configure.getMch_id());
 			order.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
 			int memberLevel = payService.memberLevel(openid);
+System.out.println("memberLevel : " + memberLevel);
 			if("GJHY".equals(payType)){
 				order.setBody("Be senior member");
 				String beHighMemberPrice = PropertiesUtils.getPropertyValueByKey("beHighMemberPrice");
@@ -89,16 +100,11 @@ public class PayOff extends HttpServlet {
 				String beMiddleMemberPrice = PropertiesUtils.getPropertyValueByKey("beMiddleMemberPrice");
 				order.setTotal_fee(Integer.valueOf(beMiddleMemberPrice));//设置价格
 			}else if("CLZT".equals(payType)){
-				order.setBody("Vehicle status query");
-				if(memberLevel==0){
-					String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
-					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
-				}else if(memberLevel==1){
-					String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
-					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
-				}else if(memberLevel==2){
-					String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
-					order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
+				queryResult = CLZT.queryResult(request, order, memberLevel);
+				if(queryResult.indexOf("errormassage")>-1){
+					 OutputStream out = response.getOutputStream();  
+					 out.write(queryResult.getBytes("UTF-8"));  
+					return;
 				}
 			}else if("BYJL".equals(payType)){
 				order.setBody("Vehicle maintenance record query");
@@ -112,29 +118,20 @@ public class PayOff extends HttpServlet {
 					String cheliangbaoyangQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_high");
 					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_high));//设置价格
 				}
+order.setTotal_fee(1);//TODO Test Code
 			}else if("CXJL".equals(payType)){
-				order.setBody("The vehicle accident records query");
-				if(memberLevel==0){
-					String chuxianjiluQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_normal");
-					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_normal));//设置价格
-				}else if(memberLevel==1){
-					String chuxianjiluQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_middle");
-					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_middle));//设置价格
-				}else if(memberLevel==2){
-					String chuxianjiluQueryPrice_high = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_high");
-					order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_high));//设置价格
+				queryResult = CXJL.queryResult(request, order, memberLevel);
+				if(queryResult.indexOf("errormassage")>-1){
+					 OutputStream out = response.getOutputStream();  
+					 out.write(queryResult.getBytes("UTF-8"));  
+					return;
 				}
 			}else if("TBXX".equals(payType)){
-				order.setBody("Vehicle insurance information query");
-				if(memberLevel==0){
-					String toubaoxinxiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_normal");
-					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_normal));//设置价格
-				}else if(memberLevel==1){
-					String toubaoxinxiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_middle");
-					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_middle));//设置价格
-				}else if(memberLevel==2){
-					String toubaoxinxiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_high");
-					order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_high));//设置价格
+				queryResult = TBXX.queryResult(request, order, memberLevel);
+				if(queryResult.indexOf("errormassage")>-1){
+					 OutputStream out = response.getOutputStream();  
+					 out.write(queryResult.getBytes("UTF-8"));  
+					return;
 				}
 			}
 			
@@ -174,6 +171,10 @@ public class PayOff extends HttpServlet {
 			json.put("paySign", sign2);
 			json.put("orderId", order.getOut_trade_no());
 			System.out.println("-------再签名:"+json.toJSONString());
+			
+			//插入订单记录表
+			order.setQueryResult(queryResult);
+			order.setQueryType(payType);
 			if(payService.insertFinancePay(order)){
 				response.getWriter().append(json.toJSONString());
 			}
@@ -190,7 +191,6 @@ public class PayOff extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -19,10 +19,19 @@ public class OrderInfo {
 	private String notify_url;// 通知地址
 	private String trade_type;// 交易类型
 	private String openid;//用户标识	
-	
+	private String queryResult;
 	private String userid;
 	private String title;
 	private String queryType;
+	
+
+	public String getQueryResult() {
+		return queryResult;
+	}
+
+	public void setQueryResult(String queryResult) {
+		this.queryResult = queryResult;
+	}
 
 	public String getSign_type() {
 		return sign_type;

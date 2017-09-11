@@ -53,7 +53,10 @@ public class TouBaoXinXiQuery extends HttpServlet {
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
-			String url = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
+			String result = payService.getQueryResult(orderId);
+			System.out.println(result);
+	        response.getWriter().append(result);
+			/*String url = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
 			if(!StringUtil.isEmpty(licenseNo)){
 				url = url+"&licenseNo="+licenseNo;
 			}
@@ -77,7 +80,7 @@ public class TouBaoXinXiQuery extends HttpServlet {
 		        response.getWriter().append(result);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 		}else{
 			response.getWriter().append("\"error\":\"has queried\"");
 		}

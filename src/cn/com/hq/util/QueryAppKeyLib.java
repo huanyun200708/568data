@@ -1,10 +1,6 @@
 package cn.com.hq.util;
 
 public class QueryAppKeyLib {
-	/**邮编查询*/
-	public static String postcodeQueryAppKey = "c02cb2b12c940e8fb10000b319b15b10";
-	public static String postcodeQueryUrl = "http://v.juhe.cn/postcode/query?";
-	
 	/**车辆信息查询*/
 	public static String cheliangzhuangtaiQueryAppKey = "c54b7bc1605c7aec1917cb352e251470";
 	public static String cheliangzhuangtaiQueryUrl = "http://v.juhe.cn/carInfo/query?";

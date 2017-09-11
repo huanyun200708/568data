@@ -54,7 +54,10 @@ public class BaoyangJiLuQuery extends HttpServlet {
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
-			String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&licenseNo"+vin;
+			String result = payService.getQueryResult(orderId);
+			System.out.println(result);
+	        response.getWriter().append(result);
+			/*String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&licenseNo"+vin;
 			if(!StringUtil.isEmpty(engine_number)){
 				url = url+"&engine_number="+engine_number;
 			}
@@ -69,7 +72,7 @@ public class BaoyangJiLuQuery extends HttpServlet {
 		        response.getWriter().append(result);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 		}else{
 			response.getWriter().append("\"error\":\"has queried\"");
 		}

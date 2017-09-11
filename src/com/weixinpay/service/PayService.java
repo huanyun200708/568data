@@ -55,6 +55,26 @@ public class PayService {
 		return result;
 	}
 	
+	public String getQueryResult(String orderId){
+		String sql = "SELECT content FROM 568db.finance_pay where orderid=?;";
+		Connection connection =  dao.getDBConnection();
+		String result = "";
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setString(1, orderId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				result = rs.getString(1);
+				break;
+		    }
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	public boolean insertFinancePay(OrderInfo orderInfo){
 		boolean result = false;
 		String sql = "INSERT INTO  568db.finance_pay (userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -69,11 +89,12 @@ public class PayService {
 			ps.setString(3, orderInfo.getOut_trade_no());
 			ps.setInt(4, orderInfo.getTotal_fee());
 			ps.setString(5,format2.format(date));
-			ps.setString(6, "");
-			ps.setString(7, "");
-			ps.setString(8, "");
+			ps.setString(6, "127.0.0.1");
+			ps.setString(7, orderInfo.getBody());
+			ps.setString(8, orderInfo.getQueryResult()==null?"":orderInfo.getQueryResult());
+			//-1代表没有付款,0代表已付款并初次查询
 			ps.setInt(9, -1);
-			ps.setString(10, "");
+			ps.setString(10, orderInfo.getQueryType());
 			result = ps.executeUpdate() > 0;
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
@@ -169,6 +190,7 @@ public class PayService {
 					e.printStackTrace();
 				}
 		    }
+			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {
 			e.printStackTrace();

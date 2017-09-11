@@ -50,7 +50,10 @@ public class CheLiangZhuangTaiQuery extends HttpServlet {
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
-			String url = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number"+number;
+			String result = payService.getQueryResult(orderId);
+			System.out.println(result);
+	        response.getWriter().append(result);
+			/*String url = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number"+number;
 			if(!StringUtil.isEmpty(type)){
 				url = url+"&type="+type;
 			}
@@ -65,7 +68,7 @@ public class CheLiangZhuangTaiQuery extends HttpServlet {
 		        response.getWriter().append(result);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 		}else{
 			response.getWriter().append("\"error\":\"has queried\"");
 		}

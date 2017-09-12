@@ -115,7 +115,6 @@ System.out.println("QueryResult : "+queryResult);
 			String toubaoxinxiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_high");
 			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_high));//设置价格
 		}
-order.setTotal_fee(1);//TODO Test Code
 		return queryResult;
 	}
 	

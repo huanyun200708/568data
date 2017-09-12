@@ -28,6 +28,7 @@ import com.weixinpay.common.Configure;
 import com.weixinpay.common.HttpRequest;
 import com.weixinpay.common.RandomStringGenerator;
 import com.weixinpay.common.Signature;
+import com.weixinpay.model.BYJL;
 import com.weixinpay.model.CLZT;
 import com.weixinpay.model.CXJL;
 import com.weixinpay.model.OrderInfo;
@@ -68,7 +69,7 @@ public class PayOff extends HttpServlet {
 System.out.println("code : "+code + "----payType : "+payType);
 		String queryResult = "";
 		 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
-	       
+	    String queryCondition = "";   
 		try {
 			/*********获取用户openid开始***************/
 			System.out.println("获取用户openid开始");
@@ -86,6 +87,7 @@ System.out.println("code : "+code + "----payType : "+payType);
 	        System.out.println("生成订单开始");
 	        String openid = u.getOpenid();
 			OrderInfo order = new OrderInfo();
+			order.setOpenid(openid);
 			order.setAppid(Configure.getAppID());
 			order.setMch_id(Configure.getMch_id());
 			order.setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
@@ -95,10 +97,12 @@ System.out.println("memberLevel : " + memberLevel);
 				order.setBody("Be senior member");
 				String beHighMemberPrice = PropertiesUtils.getPropertyValueByKey("beHighMemberPrice");
 				order.setTotal_fee(Integer.valueOf(beHighMemberPrice));//设置价格
+order.setTotal_fee(1);//TODO Test Code
 			}else if("ZJHY".equals(payType)){
 				order.setBody("Be intermediate Member");
 				String beMiddleMemberPrice = PropertiesUtils.getPropertyValueByKey("beMiddleMemberPrice");
 				order.setTotal_fee(Integer.valueOf(beMiddleMemberPrice));//设置价格
+order.setTotal_fee(1);//TODO Test Code
 			}else if("CLZT".equals(payType)){
 				queryResult = CLZT.queryResult(request, order, memberLevel);
 				if(queryResult.indexOf("errormassage")>-1){
@@ -106,19 +110,18 @@ System.out.println("memberLevel : " + memberLevel);
 					 out.write(queryResult.getBytes("UTF-8"));  
 					return;
 				}
+order.setTotal_fee(1);//TODO Test C
 			}else if("BYJL".equals(payType)){
 				order.setBody("Vehicle maintenance record query");
-				if(memberLevel==0){
-					String cheliangbaoyangQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_normal");
-					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_normal));//设置价格
-				}else if(memberLevel==1){
-					String cheliangbaoyangQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_middle");
-					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_middle));//设置价格
-				}else if(memberLevel==2){
-					String cheliangbaoyangQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangbaoyangQueryPrice_high");
-					order.setTotal_fee(Integer.valueOf(cheliangbaoyangQueryPrice_high));//设置价格
+				queryResult = BYJL.queryResult(request, order, memberLevel);
+				queryCondition = order.getQueryCondition();
+				order.setQueryCondition("");
+				if(queryResult.indexOf("errormassage")>-1){
+					 OutputStream out = response.getOutputStream();  
+					 out.write(queryResult.getBytes("UTF-8"));  
+					return;
 				}
-order.setTotal_fee(1);//TODO Test Code
+order.setTotal_fee(1);//TODO Test C
 			}else if("CXJL".equals(payType)){
 				queryResult = CXJL.queryResult(request, order, memberLevel);
 				if(queryResult.indexOf("errormassage")>-1){
@@ -126,6 +129,7 @@ order.setTotal_fee(1);//TODO Test Code
 					 out.write(queryResult.getBytes("UTF-8"));  
 					return;
 				}
+order.setTotal_fee(1);//TODO Test C
 			}else if("TBXX".equals(payType)){
 				queryResult = TBXX.queryResult(request, order, memberLevel);
 				if(queryResult.indexOf("errormassage")>-1){
@@ -133,13 +137,13 @@ order.setTotal_fee(1);//TODO Test Code
 					 out.write(queryResult.getBytes("UTF-8"));  
 					return;
 				}
+order.setTotal_fee(1);//TODO Test C
 			}
 			
 			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
 			order.setSpbill_create_ip("123.57.218.54");
 			order.setNotify_url("https://www.see-source.com/weixinpay/PayResult");
 			order.setTrade_type("JSAPI");
-			order.setOpenid(openid);
 			order.setSign_type("MD5");
 			String sign = Signature.getSign(order);//生成签名
 			order.setSign(sign);
@@ -170,6 +174,7 @@ order.setTotal_fee(1);//TODO Test Code
 			json.put("signType", signInfo.getSignType());
 			json.put("paySign", sign2);
 			json.put("orderId", order.getOut_trade_no());
+			json.put("openid", openid);
 			System.out.println("-------再签名:"+json.toJSONString());
 			
 			//插入订单记录表

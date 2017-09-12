@@ -77,7 +77,7 @@ public class PayService {
 	
 	public boolean insertFinancePay(OrderInfo orderInfo){
 		boolean result = false;
-		String sql = "INSERT INTO  568db.finance_pay (userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType) VALUES (?,?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO  568db.finance_pay (userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType,querycondition) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
@@ -95,7 +95,30 @@ public class PayService {
 			//-1代表没有付款,0代表已付款并初次查询
 			ps.setInt(9, -1);
 			ps.setString(10, orderInfo.getQueryType());
+			ps.setString(11, orderInfo.getQueryCondition()==null?"":orderInfo.getQueryCondition());
 			result = ps.executeUpdate() > 0;
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public String getBYJLqueryCondition(String openId,String vin){
+		String result = "";
+		String sql = "select content  from 568db.finance_pay where openid=? and querycondition=CONCAT('vin=',?)";
+		Connection connection =  dao.getDBConnection();
+		PreparedStatement  ps;
+		try {
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, openId);
+			ps.setString(2, vin);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				result = rs.getString(1);
+				break;
+		    }
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {
@@ -125,7 +148,7 @@ public class PayService {
 				}else if("H".equals(type)){
 					sql = "INSERT INTO 568db.member  (userid,groupid,openid,Registrationtime) VALUES ('"+openid+"',2,'"+openid+"','"+format2.format(date)+"')";
 				}
-				result = ps.executeUpdate() > 0;
+				result = ps.executeUpdate(sql) > 0;
 			}else{
 				result = true;
 			}

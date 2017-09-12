@@ -54,7 +54,7 @@ public class CXJL {
 				cxjlurl = cxjlurl+"&licenseNo="+licenseNo;
 			}
 			if(!StringUtil.isEmpty(frameNo)){
-				cxjlurl = cxjlurl+"&frameNo"+frameNo;
+				cxjlurl = cxjlurl+"&frameNo="+frameNo;
 			}
 			HttpGet cxjhttpGet = new HttpGet(cxjlurl);
 			try {
@@ -85,7 +85,6 @@ System.out.println("QueryResult : "+queryResult);
 				String chuxianjiluQueryPrice_high = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_high");
 				order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_high));//设置价格
 			}
-order.setTotal_fee(1);//TODO Test Code
 		return queryResult;
 	 }
 }

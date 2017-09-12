@@ -43,21 +43,22 @@ public class BeHighMember extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String orderId = request.getParameter("orderId");
 		String type = request.getParameter("type");
+		String openid = request.getParameter("openid");
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
 			try {
-				if(payService.beMember(orderId,type)){
-					 response.getWriter().append("\"error\":\"\",\"success\":\"true\"");
+				if(payService.beMember(openid,type)){
+					 response.getWriter().append("{\"error\":\"\",\"success\":true}");
 				}else{
-					response.getWriter().append("\"error\":\"beMember error\",\"success\":\"true\"");
+					response.getWriter().append("{\"error\":\"beMember error\",\"success\":false}");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}else{
-			response.getWriter().append("\"error\":\"has queried\"");
+			response.getWriter().append("{\"error\":\"beMember error\",\"success\":false}");
 		}
 		
 	}

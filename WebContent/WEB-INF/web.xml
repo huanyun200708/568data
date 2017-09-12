@@ -72,10 +72,15 @@
   	<servlet-name>BeHighMember</servlet-name>
   	<servlet-class>com.weixinpay.BeHighMember</servlet-class>
   </servlet>
-      <servlet>
+  <servlet>
   	<servlet-name>QueryOrder</servlet-name>
   	<servlet-class>com.weixinpay.QueryOrder</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>MemberQuery</servlet-name>
+  	<servlet-class>com.weixinpay.MemberQuery</servlet-class>
+  </servlet>
+  
   
   <servlet-mapping>
   	<servlet-name>PaySuccess</servlet-name>
@@ -124,5 +129,9 @@
       <servlet-mapping>
   	<servlet-name>QueryOrder</servlet-name>
   	<url-pattern>/QueryOrder</url-pattern>
+  </servlet-mapping>
+      <servlet-mapping>
+  	<servlet-name>MemberQuery</servlet-name>
+  	<url-pattern>/MemberQuery</url-pattern>
   </servlet-mapping>
 </web-app>

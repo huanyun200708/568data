@@ -13,7 +13,8 @@ public class QueryAppKeyLib {
 	
 	/**汽车维修保养记录*/
 	public static String baoyangQueryAppKey = "746692a951f1118a13ce74e9d8fb127e";
-	public static String baoyangQueryUrl = "http://v.juhe.cn/maintenance/submitOrder.php?";
+	public static String baoyangQueryUrl = "http://v.juhe.cn/maintenance/detail.php?";
+	public static String baoyangOrderUrl = "http://v.juhe.cn/maintenance/submitOrder.php?";
 	
 	/**出险理赔查询*/
 	public static String chuxianjiluQueryAppKey = "083c11340dc623d82d07bb6b97f51bcf";

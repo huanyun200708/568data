@@ -44,9 +44,9 @@ public class PaySuccess extends HttpServlet {
 		String orderId = request.getParameter("orderId");
 		try {
 			if(payService.paySucess(orderId)){
-				 response.getWriter().append("\"error\":\"\",\"success\":\"true\"");
+				 response.getWriter().append("{\"error\":\"\",\"success\":true}");
 			}else{
-				response.getWriter().append("\"error\":\"paySucess error\",\"success\":\"true\"");
+				response.getWriter().append("{\"error\":\"paySucess error\",\"success\":false}");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

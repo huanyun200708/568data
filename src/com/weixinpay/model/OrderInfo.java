@@ -23,7 +23,16 @@ public class OrderInfo {
 	private String userid;
 	private String title;
 	private String queryType;
+	private String queryCondition;
+
 	
+	public String getQueryCondition() {
+		return queryCondition;
+	}
+
+	public void setQueryCondition(String queryCondition) {
+		this.queryCondition = queryCondition;
+	}
 
 	public String getQueryResult() {
 		return queryResult;

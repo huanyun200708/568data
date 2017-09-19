@@ -1,4 +1,9 @@
-/.gitignore
-/com/
+/DB/
+/MySecureProtocolSocketFactory/
+/TestSyso.class
+/c3p0-config.xml
 /cn/
-/snippet/
+/com/
+/log4j.properties
+/property.properties
+/struts.xml

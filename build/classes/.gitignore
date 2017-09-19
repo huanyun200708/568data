@@ -1,6 +1,4 @@
-/DB/
-/MySecureProtocolSocketFactory/
-/c3p0-config.xml
-/cn/
-/TestSyso.class
+/.gitignore
 /com/
+/cn/
+/snippet/

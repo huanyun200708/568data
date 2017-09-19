@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,7 +22,8 @@ public class CLZT {
 	private CLZTResult result;
 	private String reason;
 	private String error_code;
-
+	private static Logger logger = Logger.getLogger(CLZT.class);
+	
 	public CLZTResult getResult() {
 		return result;
 	}
@@ -54,10 +56,21 @@ public class CLZT {
 		c.getResult().setVehicleType(c.getResult().getVehicleType());
 
 	}
-	 public static String queryResult(HttpServletRequest request,OrderInfo order,int memberLevel){
+	public static void setOrderFee(HttpServletRequest request,OrderInfo order,int memberLevel){
+		if(memberLevel==0){
+			String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
+		}else if(memberLevel==1){
+			String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
+		}else if(memberLevel==2){
+			String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
+		}
+	}
+	public static String queryResult(HttpServletRequest request,String orderId){
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		 	String queryResult = "";
-			order.setBody("Vehicle status query");
 			String number = request.getParameter("number");
 			String type = request.getParameter("type");
 			String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number="+number;
@@ -76,7 +89,7 @@ public class CLZT {
 				/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
 				CLZT c = gson.fromJson(queryResult, CLZT.class);
 				if(!"0".equals(c.error_code)){
-		        	return "{\"errormassage\":\""+c.reason+"\"}";
+					return "{\"errorMessage\":\""+c.reason+"\",\"success\":false}";
 		        }
 				try {
 					 c.translate(c);
@@ -88,17 +101,11 @@ public class CLZT {
 System.out.println("QueryResult : "+queryResult);
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error(StringUtil.errInfo(e));
+				logger.error("车辆查询失败");
+				return "{\"errorMessage\":\"查询错误,请确认输入数据是否正确\",\"success\":false}";
 			}
-			if(memberLevel==0){
-				String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
-			}else if(memberLevel==1){
-				String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
-			}else if(memberLevel==2){
-				String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
-			}
+			
 		return queryResult;
 	 }
 }

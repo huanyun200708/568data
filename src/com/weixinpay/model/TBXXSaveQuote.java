@@ -1,5 +1,7 @@
 package com.weixinpay.model;
 
+import cn.com.hq.util.StringUtil;
+
 public class TBXXSaveQuote {
 
 	private String Source                ;
@@ -52,126 +54,164 @@ public class TBXXSaveQuote {
 		return CheSun;
 	}
 	public void setCheSun(String cheSun) {
-		CheSun = cheSun;
+		if(!StringUtil.isEmpty(cheSun)){
+			CheSun = Double.valueOf(cheSun)/100 + "";
+		}
 	}
 	public String getSanZhe() {
 		return SanZhe;
 	}
 	public void setSanZhe(String sanZhe) {
-		SanZhe = sanZhe;
+		if(!StringUtil.isEmpty(sanZhe)){
+			SanZhe = Double.valueOf(sanZhe)/100 + "";
+		}
 	}
 	public String getDaoQiang() {
 		return DaoQiang;
 	}
 	public void setDaoQiang(String daoQiang) {
-		DaoQiang = daoQiang;
+		if(!StringUtil.isEmpty(daoQiang)){
+			DaoQiang = Math.round(Double.valueOf(daoQiang)/100) + "";
+		}
 	}
 	public String getSiJi() {
 		return SiJi;
 	}
 	public void setSiJi(String siJi) {
-		SiJi = siJi;
+		if(!StringUtil.isEmpty(siJi)){
+			SiJi = Double.valueOf(siJi)/100 + "";
+		}
 	}
 	public String getChengKe() {
 		return ChengKe;
 	}
 	public void setChengKe(String chengKe) {
-		ChengKe = chengKe;
+		if(!StringUtil.isEmpty(chengKe)){
+			ChengKe = Double.valueOf(chengKe)/100 + "";
+		}
 	}
 	public String getBoLi() {
 		return BoLi;
 	}
 	public void setBoLi(String boLi) {
 		BoLi = boLi;
-		//	switch (boLi) {
-	//		case "0": BoLi="不投保";break;
-	//		case "1": BoLi="1国产";break;
-	//		case "2": BoLi="进口";break;
-	//	}
+			switch (boLi) {
+			case "0": BoLi="不投保";break;
+			case "1": BoLi="1国产";break;
+			case "2": BoLi="进口";break;
+		}
 	}
 	public String getHuaHen() {
 		return HuaHen;
 	}
 	public void setHuaHen(String huaHen) {
-		HuaHen = huaHen;
+		if(!StringUtil.isEmpty(huaHen)){
+			HuaHen = Double.valueOf(huaHen)/100 + "";
+		}
 	}
 	public String getSheShui() {
 		return SheShui;
 	}
 	public void setSheShui(String sheShui) {
-		SheShui = sheShui;
+		if(!StringUtil.isEmpty(sheShui)){
+			SheShui = Double.valueOf(sheShui)/100 + "";
+		}
 	}
 	public String getZiRan() {
 		return ZiRan;
 	}
 	public void setZiRan(String ziRan) {
-		ZiRan = ziRan;
+		if(!StringUtil.isEmpty(ziRan)){
+			ZiRan = Double.valueOf(ziRan)/100 + "";
+		}
 	}
 	public String getBuJiMianCheSun() {
 		return BuJiMianCheSun;
 	}
 	public void setBuJiMianCheSun(String buJiMianCheSun) {
-		BuJiMianCheSun = buJiMianCheSun;
+		if(!StringUtil.isEmpty(buJiMianCheSun)){
+			BuJiMianCheSun = Double.valueOf(buJiMianCheSun)/100 + "";
+		}
 	}
 	public String getBuJiMianSanZhe() {
 		return BuJiMianSanZhe;
 	}
 	public void setBuJiMianSanZhe(String buJiMianSanZhe) {
-		BuJiMianSanZhe = buJiMianSanZhe;
+		if(!StringUtil.isEmpty(buJiMianSanZhe)){
+			BuJiMianSanZhe = Double.valueOf(buJiMianSanZhe)/100 + "";
+		}
 	}
 	public String getBuJiMianDaoQiang() {
 		return BuJiMianDaoQiang;
 	}
 	public void setBuJiMianDaoQiang(String buJiMianDaoQiang) {
-		BuJiMianDaoQiang = buJiMianDaoQiang;
+		if(!StringUtil.isEmpty(buJiMianDaoQiang)){
+			BuJiMianDaoQiang = Double.valueOf(buJiMianDaoQiang)/100 + "";
+		}
 	}
 	public String getBuJiMianChengKe() {
 		return BuJiMianChengKe;
 	}
 	public void setBuJiMianChengKe(String buJiMianChengKe) {
-		BuJiMianChengKe = buJiMianChengKe;
+		if(!StringUtil.isEmpty(buJiMianChengKe)){
+			BuJiMianChengKe = Double.valueOf(buJiMianChengKe)/100 + "";
+		}
 	}
 	public String getBuJiMianSiJi() {
 		return BuJiMianSiJi;
 	}
 	public void setBuJiMianSiJi(String buJiMianSiJi) {
-		BuJiMianSiJi = buJiMianSiJi;
+		if(!StringUtil.isEmpty(buJiMianSiJi)){
+			BuJiMianSiJi = Double.valueOf(buJiMianSiJi)/100 + "";
+		}
 	}
 	public String getBuJiMianHuaHen() {
 		return BuJiMianHuaHen;
 	}
 	public void setBuJiMianHuaHen(String buJiMianHuaHen) {
-		BuJiMianHuaHen = buJiMianHuaHen;
+		if(!StringUtil.isEmpty(buJiMianHuaHen)){
+			BuJiMianHuaHen = Double.valueOf(buJiMianHuaHen)/100 + "";
+		}
 	}
 	public String getBuJiMianSheShui() {
 		return BuJiMianSheShui;
 	}
 	public void setBuJiMianSheShui(String buJiMianSheShui) {
-		BuJiMianSheShui = buJiMianSheShui;
+		if(!StringUtil.isEmpty(buJiMianSheShui)){
+			BuJiMianSheShui = Double.valueOf(buJiMianSheShui)/100 + "";
+		}
 	}
 	public String getBuJiMianZiRan() {
 		return BuJiMianZiRan;
 	}
 	public void setBuJiMianZiRan(String buJiMianZiRan) {
-		BuJiMianZiRan = buJiMianZiRan;
+		if(!StringUtil.isEmpty(buJiMianZiRan)){
+			BuJiMianZiRan = Double.valueOf(buJiMianZiRan)/100 + "";
+		}
 	}
 	public String getBuJiMianJingShenSunShi() {
 		return BuJiMianJingShenSunShi;
 	}
 	public void setBuJiMianJingShenSunShi(String buJiMianJingShenSunShi) {
-		BuJiMianJingShenSunShi = buJiMianJingShenSunShi;
+		if(!StringUtil.isEmpty(buJiMianJingShenSunShi)){
+			BuJiMianJingShenSunShi = Double.valueOf(buJiMianJingShenSunShi)/100 + "";
+		}
 	}
 	public String getHcSanFangTeYue() {
 		return HcSanFangTeYue;
 	}
 	public void setHcSanFangTeYue(String hcSanFangTeYue) {
-		HcSanFangTeYue = hcSanFangTeYue;
+		if(!StringUtil.isEmpty(hcSanFangTeYue)){
+			HcSanFangTeYue = Double.valueOf(hcSanFangTeYue)/100 + "";
+		}
 	}
 	public String getHcJingShenSunShi() {
 		return HcJingShenSunShi;
 	}
 	public void setHcJingShenSunShi(String hcJingShenSunShi) {
-		HcJingShenSunShi = hcJingShenSunShi;
+		if(!StringUtil.isEmpty(hcJingShenSunShi)){
+			HcJingShenSunShi = Double.valueOf(hcJingShenSunShi)/100 + "";
+		}
 	}
 	public String getHcXiuLiChang() {
 		return HcXiuLiChang;
@@ -212,7 +252,9 @@ public class TBXXSaveQuote {
 		return BjmSheBeiSunShi;
 	}
 	public void setBjmSheBeiSunShi(String bjmSheBeiSunShi) {
-		BjmSheBeiSunShi = bjmSheBeiSunShi;
+		if(!StringUtil.isEmpty(bjmSheBeiSunShi)){
+			BjmSheBeiSunShi = Double.valueOf(bjmSheBeiSunShi)/100 + "";
+		}
 	}
 	
 	

@@ -1,10 +1,16 @@
 package cn.com.hq.util;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;  
 import java.util.List;
 import java.util.Map;
@@ -23,6 +29,8 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
+import com.weixinpay.common.Configure;
 public class SSLUtil {
 	/** 
 	 * 绕过验证 
@@ -74,8 +82,55 @@ public class SSLUtil {
 	    return client;
 	}
 	
+	public static HttpClient getHttpClientWithServerVerifyClient()throws KeyManagementException, NoSuchAlgorithmException, ClientProtocolException, IOException, CertificateException, KeyStoreException, UnrecoverableKeyException{
+		KeyStore keyStore;
+        FileInputStream instream = null;
+        keyStore = KeyStore.getInstance("PKCS12");
+        String certFilePath = PropertiesUtils.getPropertyValueByKey("certFilePath");
+		instream = new FileInputStream(new File(certFilePath));
+        keyStore.load(instream, Configure.getMch_id().toCharArray());
+        KeyManagerFactory kmfactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        kmfactory.init(keyStore, Configure.getMch_id().toCharArray()); 
+		if(instream != null){
+			instream.close();
+		}
+
+        SSLContext sc = SSLContext.getInstance("TLS");  
+	    // 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法  
+	    X509TrustManager trustManager = new X509TrustManager() {  
+	        @Override  
+	        public void checkClientTrusted(  
+	                java.security.cert.X509Certificate[] paramArrayOfX509Certificate,  
+	                String paramString) throws CertificateException {  
+	        }  
+	  
+	        @Override  
+	        public void checkServerTrusted(  
+	                java.security.cert.X509Certificate[] paramArrayOfX509Certificate,  
+	                String paramString) throws CertificateException {  
+	        }  
+	  
+	        @Override  
+	        public java.security.cert.X509Certificate[] getAcceptedIssuers() {  
+	            return null;  
+	        }  
+	    };  
+	  
+	    sc.init(kmfactory.getKeyManagers(), new TrustManager[] { trustManager }, null);  
+	 // 设置协议http和https对应的处理socket链接工厂的对象  
+	       Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()  
+	           .register("http", PlainConnectionSocketFactory.INSTANCE)  
+	           .register("https", new SSLConnectionSocketFactory(sc))  
+	           .build();  
+	       PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);  
+	       HttpClients.custom().setConnectionManager(connManager);  
+	  
+	       //创建自定义的httpclient对象  
+	    CloseableHttpClient client = HttpClients.custom().setConnectionManager(connManager).build();  
+	    return client;
+	}
+	
 	public static HttpClient getHttpClientDeprecated()throws KeyManagementException, NoSuchAlgorithmException, ClientProtocolException, IOException{
-		 SSLContext sslcontext = createIgnoreVerifySSL();  
 		 SSLContext sslContext = SSLUtil.createIgnoreVerifySSL();
 			SSLContext.setDefault(sslContext);
 			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(

@@ -34,6 +34,7 @@ public class PayResult extends HttpServlet {
 		
 		String reqParams = StreamUtil.read(request.getInputStream());
 		L.info("-------支付结果:"+reqParams);
+		System.out.println("-------支付结果:"+reqParams);
 		StringBuffer sb = new StringBuffer("<xml><return_code>SUCCESS</return_code><return_msg>OK</return_msg></xml>");
 		response.getWriter().append(sb.toString());
 	}

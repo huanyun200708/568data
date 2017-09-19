@@ -19,5 +19,7 @@
 	<property name="maxStatements">20</property> 
 	<!--maxStatementsPerConnection定义了连接池内单个连接所拥有的最大缓存statements数。Default: 0 -->
 	<property name="maxStatementsPerConnection">5</property>
+	<property name="c3p0.idle_test_period">120</property>  <!-- seconds --><!-- default: 0 --> 
+	<property name="c3p0.validate">true</property>
   </named-config>
 </c3p0-config>

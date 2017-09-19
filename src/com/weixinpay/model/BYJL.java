@@ -1,5 +1,7 @@
 package com.weixinpay.model;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpEntity;
@@ -7,16 +9,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.weixinpay.service.PayService;
-import com.weixinpay.test.Data;
+import org.apache.log4j.Logger;
 
 import cn.com.hq.util.PropertiesUtils;
 import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
 import cn.com.hq.util.StringUtil;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.weixinpay.service.PayService;
 
 public class BYJL {
 
@@ -24,7 +26,7 @@ public class BYJL {
 	private String reason;
 	private String error_code;
 	private static PayService payService = new PayService();   
-
+	private static Logger logger = Logger.getLogger(BYJL.class);
 	public BYJLResult getResult() {
 		return result;
 	}
@@ -48,21 +50,35 @@ public class BYJL {
 	public void setError_code(String error_code) {
 		this.error_code = error_code;
 	}
+	
+	public static void setOrderFee(HttpServletRequest request,OrderInfo order,int memberLevel){
+		if(memberLevel==0){
+			String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
+		}else if(memberLevel==1){
+			String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
+		}else if(memberLevel==2){
+			String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
+			order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
+		}
+	}
 
-	 public static String queryResult(HttpServletRequest request,OrderInfo order,int memberLevel){
+	public static String queryResult(HttpServletRequest request,String orderId){
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+		 	OrderInfo order = payService.getQueryOrderByorderId(orderId);
 		 	String queryResult = "";
-			order.setBody("Vehicle status query");
 			String vin = request.getParameter("vin");
-			String type = request.getParameter("type");
 			String orderurl = QueryAppKeyLib.baoyangOrderUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&vin="+vin;
 			String url = QueryAppKeyLib.baoyangQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey;
-			order.setQueryCondition("vin="+vin);
-			String condition = payService.getBYJLqueryCondition(order.getOpenid(), vin);
+			order.setQueryCondition("&vin="+vin);
+			//order.setOpenid("oUm4A0UA7pG6t-TQUVsLQqRppNl8");
+			Map<String,String> resultMap = payService.getBYJLqueryCondition(order.getOpenid(), vin);
+			String condition = resultMap.get("condition");
 	        //设置请求器的配置
 			String orderid = "";
 			try {
-				if("".equals(condition) || condition.indexOf("result")>-1){
+				if(StringUtil.isEmpty(condition) || condition.indexOf("result")>-1){
 					HttpGet httpGet = new HttpGet(orderurl);
 					HttpClient httpClient = SSLUtil.getHttpClient();
 			        HttpResponse res = httpClient.execute(httpGet);
@@ -72,7 +88,7 @@ public class BYJL {
 			        queryResult = clztresult;
 					BYJLorder border = gson.fromJson(queryResult, BYJLorder.class);
 					if(!"0".equals(border.getError_code())){
-			        	return "{\"errormassage\":\""+border.getReason()+"\"}";
+			        	return "{\"errorMessage\":\""+border.getReason()+"\",\"success\":false}";
 			        }
 					orderid = border.getResult().getOrder_id();
 					//等待5秒，等待报告生成
@@ -87,30 +103,23 @@ public class BYJL {
 				String clztresult = EntityUtils.toString(entity, "UTF-8");
 		        queryResult = clztresult;
 				BYJL b = gson.fromJson(queryResult, BYJL.class);
-				order.setQueryCondition("vin="+vin);
+				order.setQueryCondition("&vin="+vin);
 				
 				if(!"0".equals(b.getError_code())){
 					order.setQueryResult("&orderId="+orderid);
-					payService.insertFinancePay(order);
-		        	return "{\"errormassage\":\""+b.getReason()+"\"}";
+					payService.updateFinancePayContent(order);
+		        	return "{\"errorMessage\":\""+b.getReason()+"\",\"submitOrder\":1}";
 		        }
 				
 				queryResult = gson.toJson(b);
 System.out.println("QueryResult : "+queryResult);
 			} catch (Exception e) {
 				e.printStackTrace();
-				return "{\"errormassage\":\"请确认输入数据是否正确\"}";
+				logger.error("保养记录查询失败");
+				logger.error(StringUtil.errInfo(e));
+				return "{\"errorMessage\":\"查询错误,请确认输入数据是否正确\",\"success\":false}";
 			}
-			if(memberLevel==0){
-				String cheliangzhuangtaiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_normal");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_normal));//设置价格
-			}else if(memberLevel==1){
-				String cheliangzhuangtaiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_middle");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_middle));//设置价格
-			}else if(memberLevel==2){
-				String cheliangzhuangtaiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("cheliangzhuangtaiQueryPrice_high");
-				order.setTotal_fee(Integer.valueOf(cheliangzhuangtaiQueryPrice_high));//设置价格
-			}
+			
 		return queryResult;
 	 }
 }

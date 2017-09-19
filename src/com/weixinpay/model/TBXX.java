@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,6 +22,8 @@ public class TBXX {
 	private TBXXResult result;
 	private String reason;
 	private String error_code;
+	private static Logger logger = Logger.getLogger(TBXX.class);
+	
 	public TBXXResult getResult() {
 		return result;
 	}
@@ -43,6 +46,27 @@ public class TBXX {
 	public void translate(TBXX t){
 		t.getResult().getSaveQuote().setSource(t.getResult().getSaveQuote().getSource());
 		t.getResult().getSaveQuote().setHcXiuLiChangType(t.getResult().getSaveQuote().getHcXiuLiChangType());
+		t.getResult().getSaveQuote().setBoLi(t.getResult().getSaveQuote().getBoLi());
+		t.getResult().getSaveQuote().setCheSun(t.getResult().getSaveQuote().getCheSun());
+		t.getResult().getSaveQuote().setSanZhe(t.getResult().getSaveQuote().getSanZhe());
+		t.getResult().getSaveQuote().setDaoQiang(t.getResult().getSaveQuote().getDaoQiang());
+		t.getResult().getSaveQuote().setSiJi(t.getResult().getSaveQuote().getSiJi());
+		t.getResult().getSaveQuote().setChengKe (t.getResult().getSaveQuote().getChengKe ());
+		t.getResult().getSaveQuote().setHuaHen(t.getResult().getSaveQuote().getHuaHen());
+		t.getResult().getSaveQuote().setBuJiMianCheSun(t.getResult().getSaveQuote().getBuJiMianCheSun());
+		t.getResult().getSaveQuote().setBuJiMianSanZhe(t.getResult().getSaveQuote().getBuJiMianSanZhe());
+		t.getResult().getSaveQuote().setBuJiMianDaoQiang(t.getResult().getSaveQuote().getBuJiMianDaoQiang());
+		t.getResult().getSaveQuote().setSheShui (t.getResult().getSaveQuote().getSheShui ());
+		t.getResult().getSaveQuote().setZiRan (t.getResult().getSaveQuote().getZiRan ());
+		t.getResult().getSaveQuote().setBuJiMianChengKe (t.getResult().getSaveQuote().getBuJiMianChengKe ());
+		t.getResult().getSaveQuote().setBuJiMianSiJi(t.getResult().getSaveQuote().getBuJiMianSiJi());
+		t.getResult().getSaveQuote().setBuJiMianHuaHen(t.getResult().getSaveQuote().getBuJiMianHuaHen());
+		t.getResult().getSaveQuote().setBuJiMianSheShui (t.getResult().getSaveQuote().getBuJiMianSheShui ());
+		t.getResult().getSaveQuote().setBuJiMianZiRan (t.getResult().getSaveQuote().getBuJiMianZiRan ());
+		t.getResult().getSaveQuote().setBuJiMianJingShenSunShi(t.getResult().getSaveQuote().getBuJiMianJingShenSunShi());
+		t.getResult().getSaveQuote().setHcSanFangTeYue(t.getResult().getSaveQuote().getHcSanFangTeYue());
+		t.getResult().getSaveQuote().setHcJingShenSunShi(t.getResult().getSaveQuote().getHcJingShenSunShi());
+		t.getResult().getSaveQuote().setBjmSheBeiSunShi (t.getResult().getSaveQuote().getBjmSheBeiSunShi ());
 		
 		t.getResult().getUserInfo().setCarUsedType(t.getResult().getUserInfo().getCarUsedType());
 		t.getResult().getUserInfo().setIdType(t.getResult().getUserInfo().getIdType());
@@ -58,8 +82,22 @@ public class TBXX {
 		
 		
 	}
-	public static String queryResult(HttpServletRequest request,
-			OrderInfo order, int memberLevel) {
+	
+	public static void setOrderFee(HttpServletRequest request,OrderInfo order,int memberLevel){
+		order.setBody("Vehicle insurance information query");
+		if(memberLevel==0){
+			String toubaoxinxiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_normal");
+			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_normal));//设置价格
+		}else if(memberLevel==1){
+			String toubaoxinxiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_middle");
+			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_middle));//设置价格
+		}else if(memberLevel==2){
+			String toubaoxinxiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_high");
+			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_high));//设置价格
+		}
+	}
+	
+	public static String queryResult(HttpServletRequest request,String orderId){
 		 Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		 	String queryResult = "";
 		String licenseNo = request.getParameter("licenseNo");
@@ -67,6 +105,7 @@ public class TBXX {
 		String engineNo = request.getParameter("engineNo");
 		String renewalCarType = request.getParameter("renewalCarType");
 		String tbxxurl = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
+		
 		if(!StringUtil.isEmpty(licenseNo)){
 			tbxxurl = tbxxurl+"&licenseNo="+licenseNo;
 		}
@@ -74,7 +113,7 @@ public class TBXX {
 			tbxxurl = tbxxurl+"&carVin="+carVin;
 		}
 		if(!StringUtil.isEmpty(engineNo)){
-			tbxxurl = engineNo+"&type="+engineNo;
+			tbxxurl = tbxxurl+"&engineNo="+engineNo;
 		}
 		if(!StringUtil.isEmpty(renewalCarType)){
 			tbxxurl = tbxxurl+"&renewalCarType="+renewalCarType;
@@ -92,7 +131,7 @@ public class TBXX {
 	        try {
 	        	TBXX tbxx = gson.fromJson(queryResult, TBXX.class);
 	        	if(!"0".equals(tbxx.error_code)){
-		        	return "{\"errormassage\":\""+tbxx.reason+"\"}";
+		        	return "{\"errorMessage\":\""+tbxx.reason+"\",\"success\":false}";
 		        }
 		        tbxx.translate(tbxx);
 		        queryResult = gson.toJson(tbxx);
@@ -102,19 +141,11 @@ public class TBXX {
 	        
 System.out.println("QueryResult : "+queryResult);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(StringUtil.errInfo(e));
+			logger.error("投保信息查询失败");
+			return "{\"errorMessage\":\"查询错误,请确认输入数据是否正确\",\"success\":false}";
 		}
-		order.setBody("Vehicle insurance information query");
-		if(memberLevel==0){
-			String toubaoxinxiQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_normal");
-			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_normal));//设置价格
-		}else if(memberLevel==1){
-			String toubaoxinxiQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_middle");
-			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_middle));//设置价格
-		}else if(memberLevel==2){
-			String toubaoxinxiQueryPrice_high = PropertiesUtils.getPropertyValueByKey("toubaoxinxiQueryPrice_high");
-			order.setTotal_fee(Integer.valueOf(toubaoxinxiQueryPrice_high));//设置价格
-		}
+		
 		return queryResult;
 	}
 	

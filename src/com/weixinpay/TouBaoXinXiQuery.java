@@ -18,6 +18,7 @@ import cn.com.hq.util.SSLUtil;
 import cn.com.hq.util.StringUtil;
 
 import com.weixinpay.common.Configure;
+import com.weixinpay.model.OrderInfo;
 import com.weixinpay.service.PayService;
 
 /**
@@ -53,7 +54,8 @@ public class TouBaoXinXiQuery extends HttpServlet {
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
-			String result = payService.getQueryResult(orderId);
+			OrderInfo order = payService.getQueryOrderByorderId(orderId);
+			String result = order.getQueryCondition();
 			System.out.println(result);
 	        response.getWriter().append(result);
 			/*String url = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;

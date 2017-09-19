@@ -2,22 +2,12 @@ package com.weixinpay;
 
 import java.io.IOException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-import org.apache.http.client.HttpClient;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cn.com.hq.util.QueryAppKeyLib;
-import cn.com.hq.util.SSLUtil;
-import cn.com.hq.util.StringUtil;
-
-import com.weixinpay.common.Configure;
+import com.weixinpay.model.OrderInfo;
 import com.weixinpay.service.PayService;
 
 /**
@@ -54,7 +44,8 @@ public class BaoyangJiLuQuery extends HttpServlet {
 		boolean isOrderFirstQuery = payService.isOrderFirstQuery(orderId);
 		/*******查询用户是否支付成功，成功后才进行查询*******/
 		if(isOrderFirstQuery){
-			String result = payService.getQueryResult(orderId);
+			OrderInfo order = payService.getQueryOrderByorderId(orderId);
+			String result = order.getQueryCondition();
 			System.out.println(result);
 	        response.getWriter().append(result);
 			/*String url = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&licenseNo"+vin;

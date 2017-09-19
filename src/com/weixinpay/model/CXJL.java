@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 
 import cn.com.hq.util.PropertiesUtils;
 import cn.com.hq.util.QueryAppKeyLib;
@@ -15,13 +16,14 @@ import cn.com.hq.util.StringUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.weixinpay.test.Data;
 
 public class CXJL {
 
 	private CXJLResult result;
 	private String reason;
 	private String error_code;
+	private static Logger logger = Logger.getLogger(CXJL.class);
+	
 	public CXJLResult getResult() {
 		return result;
 	}
@@ -42,7 +44,79 @@ public class CXJL {
 		this.error_code = error_code;
 	}
 	
-	public static String queryResult(HttpServletRequest request,OrderInfo order,int memberLevel){
+	public static void translate(CXJL c) {
+		String claimMoney = c.getResult().getSummaryData().getClaimMoney();
+		if(!StringUtil.isEmpty(claimMoney)){
+			claimMoney = Double.valueOf(claimMoney)/100 + "";
+		}
+		c.getResult().getSummaryData().setClaimMoney(claimMoney);
+		
+		String renewMoney = c.getResult().getSummaryData().getRenewMoney();
+		if(!StringUtil.isEmpty(renewMoney)){
+			renewMoney = Double.valueOf(renewMoney)/100 + "";
+		}
+		c.getResult().getSummaryData().setRenewMoney(renewMoney);
+		
+		String repairMoney = c.getResult().getSummaryData().getRepairMoney();
+		if(!StringUtil.isEmpty(repairMoney)){
+			repairMoney = Double.valueOf(repairMoney)/100 + "";
+		}
+		c.getResult().getSummaryData().setRepairMoney(repairMoney);
+		
+		
+		for(CXJLcarClaimRecord r : c.getResult().getCarClaimRecords()){
+			String otherAmount = r.getOtherAmount();
+			if(!StringUtil.isEmpty(otherAmount)){
+				otherAmount = Double.valueOf(otherAmount)/100 + "";
+			}
+			r.setOtherAmount(otherAmount);
+			
+			String repairAmount = r.getRepairAmount();
+			if(!StringUtil.isEmpty(repairAmount)){
+				repairAmount = Double.valueOf(repairAmount)/100 + "";
+			}
+			r.setRepairAmount(repairAmount);
+			
+			String renewalAmount = r.getRenewalAmount();
+			if(!StringUtil.isEmpty(renewalAmount)){
+				renewalAmount = Double.valueOf(renewalAmount)/100 + "";
+			}
+			r.setRenewalAmount(renewalAmount);
+			
+			String damageMoney = r.getDamageMoney();
+			if(!StringUtil.isEmpty(damageMoney)){
+				damageMoney = Double.valueOf(damageMoney)/100 + "";
+			}
+			r.setDamageMoney(damageMoney);
+			
+			for(CXJLclaimDetail d : r.getClaimDetails()){
+				String itemAmount = d.getItemAmount();
+				if(!StringUtil.isEmpty(itemAmount)){
+					itemAmount = Double.valueOf(itemAmount)/100 + "";
+				}
+				d.setItemAmount(itemAmount);
+			}
+		}
+
+	}
+	
+	public static void setOrderFee(HttpServletRequest request,OrderInfo order,int memberLevel){
+
+		//设置订单标题和价格
+		order.setBody("The vehicle accident records query");
+		if(memberLevel==0){
+			String chuxianjiluQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_normal");
+			order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_normal));//设置价格
+		}else if(memberLevel==1){
+			String chuxianjiluQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_middle");
+			order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_middle));//设置价格
+		}else if(memberLevel==2){
+			String chuxianjiluQueryPrice_high = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_high");
+			order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_high));//设置价格
+		}
+	}
+	
+	public static String queryResult(HttpServletRequest request,String orderId){
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		 	String queryResult = "";
 
@@ -63,27 +137,26 @@ public class CXJL {
 		        HttpEntity cxjentity = cxjles.getEntity();
 		        String cxjlesult = EntityUtils.toString(cxjentity, "UTF-8");
 		        queryResult = cxjlesult;
+				//queryResult = Data.CXJL;
 		        CXJL cxjl = gson.fromJson(queryResult, CXJL.class);
 		        if(!"0".equals(cxjl.error_code)){
-		        	return "{\"errormassage\":\""+cxjl.reason+"\"}";
+		        	return "{\"errorMessage\":\""+cxjl.reason+"\",\"success\":false}";
 		        }
+		       
+		        try {
+		        	 translate(cxjl);
+				     queryResult = gson.toJson(cxjl);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 				//queryResult = Data.CXJL.replaceAll("\\s+", " ");
 		        //queryResult = "{\"reason\":\"1:没有查到理赔记录\",\"result\":null,\"error_code\":228201}";
 System.out.println("QueryResult : "+queryResult);
 			} catch (Exception e) {
+				logger.error(StringUtil.errInfo(e));
+				logger.error("车辆查询失败");
 				e.printStackTrace();
-			}
-			//2、设置订单标题和价格
-			order.setBody("The vehicle accident records query");
-			if(memberLevel==0){
-				String chuxianjiluQueryPrice_normal = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_normal");
-				order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_normal));//设置价格
-			}else if(memberLevel==1){
-				String chuxianjiluQueryPrice_middle = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_middle");
-				order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_middle));//设置价格
-			}else if(memberLevel==2){
-				String chuxianjiluQueryPrice_high = PropertiesUtils.getPropertyValueByKey("chuxianjiluQueryPrice_high");
-				order.setTotal_fee(Integer.valueOf(chuxianjiluQueryPrice_high));//设置价格
+				return "{\"errorMessage\":\"查询错误,请确认输入数据是否正确\",\"success\":false}";
 			}
 		return queryResult;
 	 }

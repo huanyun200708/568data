@@ -80,6 +80,10 @@
   	<servlet-name>MemberQuery</servlet-name>
   	<servlet-class>com.weixinpay.MemberQuery</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>PayRecord</servlet-name>
+  	<servlet-class>com.weixinpay.PayRecord</servlet-class>
+  </servlet>
   
   
   <servlet-mapping>
@@ -130,8 +134,12 @@
   	<servlet-name>QueryOrder</servlet-name>
   	<url-pattern>/QueryOrder</url-pattern>
   </servlet-mapping>
-      <servlet-mapping>
+  <servlet-mapping>
   	<servlet-name>MemberQuery</servlet-name>
   	<url-pattern>/MemberQuery</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>PayRecord</servlet-name>
+  	<url-pattern>/PayRecord</url-pattern>
   </servlet-mapping>
 </web-app>

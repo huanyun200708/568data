@@ -7,13 +7,19 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.weixinpay.model.OrderInfo;
 
 import cn.com.hq.dao.Dao;
 import cn.com.hq.util.PropertiesUtils;
+import cn.com.hq.util.StringUtil;
 import cn.com.hq.vo.OnboardInfoVO;
 
 public class PayService {
@@ -55,16 +61,23 @@ public class PayService {
 		return result;
 	}
 	
-	public String getQueryResult(String orderId){
-		String sql = "SELECT content FROM 568db.finance_pay where orderid=?;";
+	public OrderInfo getQueryOrderByorderId(String orderId){
+		String sql = "SELECT userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType,querycondition FROM 568db.finance_pay where orderid=?;";
 		Connection connection =  dao.getDBConnection();
-		String result = "";
+		OrderInfo order = new OrderInfo();
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, orderId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
-				result = rs.getString(1);
+				order.setUserid(rs.getString(1));
+				order.setOpenid(rs.getString(2));
+				order.setOut_trade_no(orderId);
+				order.setTotal_fee(rs.getInt(4));
+				order.setTitle(rs.getString(7));
+				order.setQueryResult(rs.getString(8));
+				order.setQueryCondition(rs.getString(11));
+				order.setQueryType(rs.getString(10));
 				break;
 		    }
 			dao.closeStatement(ps);
@@ -72,7 +85,82 @@ public class PayService {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return result;
+		return order;
+	}
+	
+	public List<JSONObject> getPayRecordsByOpenId(String openid){
+		 List<JSONObject> results = new ArrayList<JSONObject>();
+		String sql = "SELECT orderid,paytime,queryType,querycondition,content"
+				+ " FROM 568db.finance_pay t"
+				+ " where openid=? and (t.`isRefound` <> 'Y' OR t.`isRefound` IS NULL) ORDER BY t.`paytime` DESC";
+		Connection connection =  dao.getDBConnection();
+		OrderInfo order = new OrderInfo();
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setString(1, openid);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				if(StringUtil.isEmpty(rs.getString(5))){
+					continue;
+				}
+				JSONObject json = new JSONObject();
+				String orderid = rs.getString(1);
+				String paytime = rs.getString(2);
+				String queryType = rs.getString(3);
+				String querycondition = rs.getString(4);
+				String content = "";
+				
+				DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
+				Date d = format2.parse(paytime);
+				format2  = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
+				paytime = format2.format(d);
+				
+				if ("ZJHY".equals(queryType)) {
+					content = "升级为中级会员";
+				}else if("GJHY".equals(queryType)){
+					content = "升级为高级会员";
+				}else if("CLZT".equals(queryType)){
+					content = "车辆状态查询，\r\n";
+					if(!StringUtil.isEmpty(querycondition)){
+						content = content + "车牌号:" +querycondition.replace("&number=", "");
+					}
+				}else if("BYJL".equals(queryType)){
+					content = "维保信息查询，\r\n";
+					if(!StringUtil.isEmpty(querycondition)){
+						content = content + "车架号:" +querycondition.replace("&vin=", "");
+					}
+				}else if("CXJL".equals(queryType)){
+					content = "出险信息查询，\r\n";
+					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
+						content = content + "车牌号:" +querycondition.replaceAll("&licenseNo=", "").replaceAll("&frameNo.*", "");
+					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
+						content = content + " 车架号:" +querycondition.replaceAll(".*&frameNo=", "");
+					}
+				}else if("TBXX".equals(queryType)){
+					content = "投保信息查询，\r\n";
+					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
+						content = content + "车牌号:" +querycondition.replaceAll("&licenseNo=", "").replaceAll("&carVin.*", "");
+					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("carVin")>-1){
+						content = content + " 车架号:" +querycondition.replaceAll(".*&carVin=", "").replaceAll("&engineNo.*", "");
+					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("engineNo")>-1){
+						content = content + " 发动机号:" +querycondition.replaceAll(".*&engineNo=", "").replaceAll("&renewalCarType.*", "");
+					}
+				}
+				
+				json.put("orderid",orderid);
+				json.put("paytime", paytime);
+				json.put("queryType", queryType);
+				json.put("querycondition", querycondition);
+				json.put("content", content);
+				
+				results.add(json);
+		    }
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return results;
 	}
 	
 	public boolean insertFinancePay(OrderInfo orderInfo){
@@ -105,9 +193,9 @@ public class PayService {
 		return result;
 	}
 	
-	public String getBYJLqueryCondition(String openId,String vin){
-		String result = "";
-		String sql = "select content  from 568db.finance_pay where openid=? and querycondition=CONCAT('vin=',?)";
+	public Map<String,String> getBYJLqueryCondition(String openId,String vin){
+		Map<String,String> result = new HashMap<String,String>();
+		String sql = "select content,orderid  from 568db.finance_pay where openid=? and querycondition=CONCAT('&vin=',?)";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
@@ -116,7 +204,8 @@ public class PayService {
 			ps.setString(2, vin);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
-				result = rs.getString(1);
+				result.put("condition", rs.getString(1));
+				result.put("orderId", rs.getString(2));
 				break;
 		    }
 			dao.closeStatement(ps);
@@ -161,9 +250,9 @@ public class PayService {
 		return result;
 	}
 
-	public boolean paySucess(String out_trade_no){
+	public boolean paySucess(String out_trade_no,String content){
 		boolean result = false;
-		String sql = "update 568db.finance_pay set confirmTime=0 where orderid=?";
+		String sql = "update 568db.finance_pay set confirmTime=0,content='"+content+"' where orderid=?";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
@@ -219,5 +308,43 @@ public class PayService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	public void updateFinancePayContent(OrderInfo order) {
+		boolean result = false;
+		String sql = "update 568db.finance_pay set content='"+order.getQueryResult()+"' where orderid=?";
+		Connection connection =  dao.getDBConnection();
+		PreparedStatement  ps;
+		try {
+			Date date = new Date();
+			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, order.getOut_trade_no());
+			result = ps.executeUpdate() > 0;
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateFinancePayReFound(OrderInfo order) {
+		boolean result = false;
+		String sql = "update 568db.finance_pay set isRefound='Y' where orderid=?";
+		Connection connection =  dao.getDBConnection();
+		PreparedStatement  ps;
+		try {
+			Date date = new Date();
+			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, order.getOut_trade_no());
+			result = ps.executeUpdate() > 0;
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

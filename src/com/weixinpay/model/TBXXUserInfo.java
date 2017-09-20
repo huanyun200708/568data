@@ -1,9 +1,21 @@
 package com.weixinpay.model;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+
+import cn.com.hq.util.QueryAppKeyLib;
+import cn.com.hq.util.SSLUtil;
 import cn.com.hq.util.StringUtil;
 
-public class TBXXUserInfo {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+public class TBXXUserInfo {
+	private static Logger logger = Logger.getLogger(TBXXUserInfo.class);
 	private String CarUsedType;
 	private String LicenseNo;
 	private String LicenseOwner;
@@ -144,8 +156,44 @@ public class TBXXUserInfo {
 	public String getCityCode() {
 		return CityCode;
 	}
-
+	
+	public CityZiDian getCityZiDian(){
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+		String url =  QueryAppKeyLib.chengShiIdUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
+		HttpGet httpGet = new HttpGet(url);
+        //设置请求器的配置
+		try {
+			HttpClient httpClient = SSLUtil.getHttpClient();
+	        HttpResponse res = httpClient.execute(httpGet);
+	        HttpEntity entity = res.getEntity();
+	        String result = EntityUtils.toString(entity, "UTF-8");
+	        System.out.println(result);
+	        System.out.println("result : "+result);
+	        result = result.replace("附录1", "fulu1").replace("附录2", "fulu2").replace("附录3", "fulu3").replace("附录4", "fulu4").replace("附录5", "fulu5").replace("附录6", "fulu6");
+	        CityZiDian c = gson.fromJson(result, CityZiDian.class);
+	        if(!"0".equals(c.getError_code())){
+	        	return null;
+	        }
+			return c;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(StringUtil.errInfo(e));
+			logger.error("城市字典查询失败");
+			return null;
+		}
+	}
+public static void main(String[] args) {
+	TBXXUserInfo t = new TBXXUserInfo();
+	t.setCityCode("10");
+	System.out.println(t.getCityCode());
+	
+}
 	public void setCityCode(String cityCode) {
+		CityZiDian zd = getCityZiDian();
+		if(zd != null){
+			CityCode = zd.getResult().get(cityCode);
+			return;
+		}
 		switch (cityCode) {
 			case "1"	: CityCode="北京"   ; break;
 			case "10"	: CityCode="福州"   ; break;

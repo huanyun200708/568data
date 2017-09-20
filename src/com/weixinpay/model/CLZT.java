@@ -47,8 +47,65 @@ public class CLZT {
 	public void setError_code(String error_code) {
 		this.error_code = error_code;
 	}
+	
+	public CLZD getCheLiangZiDian(){
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+		String clzdurl = QueryAppKeyLib.cheliangZiDianUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey;
+		HttpGet clzdhttpGet = new HttpGet(clzdurl);
+        //设置请求器的配置
+		try {
+			HttpClient clzdhttpClient = SSLUtil.getHttpClient();
+	        HttpResponse clzdres = clzdhttpClient.execute(clzdhttpGet);
+	        HttpEntity clzdentity = clzdres.getEntity();
+	        String clzdresult = EntityUtils.toString(clzdentity, "UTF-8");
+	        System.out.println(clzdresult);
+	        System.out.println("clzdresult : "+clzdresult);
+	        clzdresult = clzdresult.replace("附录1", "fulu1").replace("附录2", "fulu2").replace("附录3", "fulu3").replace("附录4", "fulu4").replace("附录5", "fulu5").replace("附录6", "fulu6");
+	        CLZD c = gson.fromJson(clzdresult, CLZD.class);
+			return c;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(StringUtil.errInfo(e));
+			logger.error("车辆字典查询失败");
+			return null;
+		}
+	}
 
 	public void translate(CLZT c) {
+		CLZD clzd = this.getCheLiangZiDian();
+		if(clzd != null){
+			String state0 = c.getResult().getState();//fulu5
+			String state = "";
+			for(char ch : state0.toCharArray()){
+				state = state + clzd.getFulu5().get(ch+"") + " ";
+			}
+			c.getResult().setState(state);
+			
+			String properties0 = c.getResult().getProperties();//fulu4
+			String properties =  "";
+			for(char ch : properties0.toCharArray()){
+				properties = properties + clzd.getFulu4().get(ch+"") + " ";
+			}
+			c.getResult().setProperties(properties);
+			
+			String color0 = c.getResult().getColor();//fulu3
+			String color = "";
+			for(char ch : color0.toCharArray()){
+				color = color + clzd.getFulu3().get(ch+"") ;
+			}
+			c.getResult().setColor(color);
+			
+			String fuel0 = c.getResult().getFuel();//fulu6
+			String fuel = "";
+			for(char ch : fuel0.toCharArray()){
+				fuel = fuel + clzd.getFulu6().get(ch+"") ;
+			}
+			c.getResult().setFuel(fuel);
+			
+			String vehicleType = c.getResult().getVehicleType();//fulu2
+			c.getResult().setVehicleType(clzd.getFulu2().get(vehicleType));
+			return;
+		}
 		c.getResult().setState(c.getResult().getState());
 		c.getResult().setProperties(c.getResult().getProperties());
 		c.getResult().setColor(c.getResult().getColor());
@@ -110,4 +167,8 @@ System.out.println("QueryResult : "+queryResult);
 			
 		return queryResult;
 	 }
+	
+	public static void main(String[] args) {
+		new CLZT().getCheLiangZiDian();
+	}
 }

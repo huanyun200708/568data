@@ -180,6 +180,19 @@ public class PayOff extends HttpServlet {
 //order.setTotal_fee(1);//TODO Test C
 			}
 			
+			String SupermanOpenId = PropertiesUtils.getPropertyValueByKey("SupermanOpenId");
+			if(!StringUtil.isEmpty(SupermanOpenId)){
+				String [] sman = SupermanOpenId.split(",");
+				for(String s : sman){
+					if(openid.equals(s)){
+						order.setTotal_fee(1);//TODO Super Man Occur!!!
+						System.out.println("Super Man Occur!!!");
+						logger.info("Super Man Occur!!!");
+						break;
+					}
+				}
+			}
+			
 			order.setOut_trade_no(RandomStringGenerator.getRandomStringByLength(32));
 			order.setSpbill_create_ip("123.57.218.54");
 			order.setNotify_url("https://51yangcong.com/568data/PayResult");

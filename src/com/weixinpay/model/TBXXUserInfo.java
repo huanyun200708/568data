@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 
 public class TBXXUserInfo {
 	private static Logger logger = Logger.getLogger(TBXXUserInfo.class);
+	private boolean isHideInfo = true;
 	private String CarUsedType;
 	private String LicenseNo;
 	private String LicenseOwner;
@@ -85,7 +86,7 @@ public class TBXXUserInfo {
 	}
 
 	public void setLicenseOwner(String licenseOwner) {
-		if(!StringUtil.isEmpty(licenseOwner)){
+		if(!StringUtil.isEmpty(licenseOwner) && this.isHideInfo){
 			LicenseOwner = licenseOwner.substring(0, licenseOwner.length()-1)+"*";
 		}else{
 			LicenseOwner = licenseOwner;
@@ -99,7 +100,7 @@ public class TBXXUserInfo {
 
 	public void setInsuredName(String insuredName) {
 		
-		if(!StringUtil.isEmpty(insuredName)){
+		if(!StringUtil.isEmpty(insuredName)  && this.isHideInfo){
 			InsuredName = insuredName.substring(0, insuredName.length()-1)+"*";
 		}else{
 			InsuredName = insuredName;
@@ -112,7 +113,7 @@ public class TBXXUserInfo {
 
 	public void setPostedName(String postedName) {
 		
-		if(!StringUtil.isEmpty(postedName)){
+		if(!StringUtil.isEmpty(postedName)  && this.isHideInfo){
 			PostedName = postedName.substring(0, postedName.length()-1)+"*";
 		}else{
 			PostedName = postedName;
@@ -146,7 +147,7 @@ public class TBXXUserInfo {
 
 	public void setCredentislasNum(String credentislasNum) {
 		
-		if(!StringUtil.isEmpty(credentislasNum)){
+		if(!StringUtil.isEmpty(credentislasNum)  && this.isHideInfo){
 			CredentislasNum = credentislasNum.substring(0, credentislasNum.length()-4)+"****";
 		}else{
 			CredentislasNum = credentislasNum;
@@ -401,7 +402,7 @@ public static void main(String[] args) {
 
 	public void setInsuredIdCard(String insuredIdCard) {
 		
-		if(!StringUtil.isEmpty(insuredIdCard)){
+		if(!StringUtil.isEmpty(insuredIdCard)  && this.isHideInfo){
 			InsuredIdCard = insuredIdCard.substring(0, insuredIdCard.length()-4)+"****";
 		}else{
 			InsuredIdCard = insuredIdCard;
@@ -434,7 +435,7 @@ public static void main(String[] args) {
 
 	public void setInsuredMobile(String insuredMobile) {
 		
-		if(!StringUtil.isEmpty(insuredMobile)){
+		if(!StringUtil.isEmpty(insuredMobile)  && this.isHideInfo){
 			InsuredMobile = insuredMobile.substring(0, insuredMobile.length()-4)+"****";
 		}else{
 			InsuredMobile = insuredMobile;
@@ -446,7 +447,7 @@ public static void main(String[] args) {
 	}
 
 	public void setHolderIdCard(String holderIdCard) {
-		if(!StringUtil.isEmpty(holderIdCard)){
+		if(!StringUtil.isEmpty(holderIdCard) && this.isHideInfo){
 			HolderIdCard = holderIdCard.substring(0, holderIdCard.length()-4)+"****";
 		}else{
 			HolderIdCard = holderIdCard;
@@ -478,7 +479,7 @@ public static void main(String[] args) {
 	}
 
 	public void setHolderMobile(String holderMobile) {
-		if(!StringUtil.isEmpty(holderMobile)){
+		if(!StringUtil.isEmpty(holderMobile) && this.isHideInfo){
 			HolderMobile = holderMobile.substring(0, holderMobile.length()-4)+"****";
 		}else{
 			HolderMobile = holderMobile;
@@ -559,6 +560,13 @@ public static void main(String[] args) {
 
 	public void setAutoMoldCode(String autoMoldCode) {
 		AutoMoldCode = autoMoldCode;
+	}
+	
+	public boolean isHideInfo() {
+		return isHideInfo;
+	}
+	public void setHideInfo(boolean isHideInfo) {
+		this.isHideInfo = isHideInfo;
 	}
 
 }

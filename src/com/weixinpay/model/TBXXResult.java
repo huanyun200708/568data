@@ -17,5 +17,6 @@ public class TBXXResult {
 		SaveQuote = saveQuote;
 	}
 	
+	
 
 }

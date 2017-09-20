@@ -49,6 +49,7 @@ public class CLZTResult {
 		case "O":this.state="锁定"   ; break;
 		case "P":this.state="机动车达到报废标准，公告牌作废"   ; break;
 		case "Q":this.state=" 逾期未检验"   ; break;
+		default : this.state = state;
 		}
 	}
 	public String getPlate() {
@@ -93,6 +94,7 @@ public class CLZTResult {
 		case "Q":this.properties="初中生校车"   ; break;
 		case "R":this.properties="危化品运输"   ; break;
 		case "S":this.properties="中小学生校车"   ; break;
+		default : this.properties = properties;
 		}
 	}
 	public String getType() {
@@ -146,6 +148,7 @@ public class CLZTResult {
 		case "H":this.color="蓝"   ; break;
 		case "I":this.color="棕"   ; break;
 		case "J":this.color="黑"   ; break;
+		default : this.color = color;
 		}
 	}
 	public String getValidity() {
@@ -177,6 +180,7 @@ public class CLZTResult {
 			case "O":this.fuel="混合动力"   ; break;
 			case "Y":this.fuel="无"   ; break;
 			case "Z":this.fuel="其他"   ; break;
+			default : this.fuel = fuel;
 		}
 	
 	}
@@ -339,6 +343,7 @@ public class CLZTResult {
 		case "Z31":this.vehicleType="小型专项作业车"   ; break;
 		case "Z41":this.vehicleType="微型专项作业车"   ; break;
 		case "Z51":this.vehicleType="重型专项作业车"   ; break;
+		default : this.vehicleType = vehicleType;
 		}
 	}
 	public String getCc() {

@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.weixinpay.service.PayService;
 
 import cn.com.hq.util.PropertiesUtils;
 import cn.com.hq.util.QueryAppKeyLib;
@@ -23,7 +24,6 @@ public class TBXX {
 	private String reason;
 	private String error_code;
 	private static Logger logger = Logger.getLogger(TBXX.class);
-	
 	public TBXXResult getResult() {
 		return result;
 	}
@@ -43,7 +43,7 @@ public class TBXX {
 	public void setError_code(String error_code) {
 		this.error_code = error_code;
 	}
-	public void translate(TBXX t){
+	public void translate(TBXX t,String openId){
 		t.getResult().getSaveQuote().setSource(t.getResult().getSaveQuote().getSource());
 		t.getResult().getSaveQuote().setHcXiuLiChangType(t.getResult().getSaveQuote().getHcXiuLiChangType());
 		t.getResult().getSaveQuote().setBoLi(t.getResult().getSaveQuote().getBoLi());
@@ -82,6 +82,16 @@ public class TBXX {
 		t.getResult().getUserInfo().setIsPublic(t.getResult().getUserInfo().getIsPublic());
 		
 		//隐藏敏感信息
+		String SupermanOpenId = PropertiesUtils.getPropertyValueByKey("SupermanOpenId");
+		if(!StringUtil.isEmpty(SupermanOpenId)){
+			String [] sman = SupermanOpenId.split(",");
+			for(String s : sman){
+				if(openId.equals(s)){
+					t.getResult().getUserInfo().setHideInfo(false);
+					break;
+				}
+			}
+		}
 		t.getResult().getUserInfo().setLicenseOwner(t.getResult().getUserInfo().getLicenseOwner());
 		t.getResult().getUserInfo().setInsuredName(t.getResult().getUserInfo().getInsuredName());
 		t.getResult().getUserInfo().setPostedName(t.getResult().getUserInfo().getPostedName());
@@ -143,7 +153,8 @@ public class TBXX {
 	        	if(!"0".equals(tbxx.error_code)){
 		        	return "{\"errorMessage\":\""+tbxx.reason+"\",\"success\":false}";
 		        }
-		        tbxx.translate(tbxx);
+	        	OrderInfo order =  new PayService().getQueryOrderByorderId(orderId);
+		        tbxx.translate(tbxx,order.getOpenid());
 		        queryResult = gson.toJson(tbxx);
 			} catch (Exception e) {
 				// TODO: handle exception

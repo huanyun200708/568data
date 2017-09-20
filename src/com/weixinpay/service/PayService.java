@@ -120,24 +120,26 @@ public class PayService {
 				}else if("GJHY".equals(queryType)){
 					content = "升级为高级会员";
 				}else if("CLZT".equals(queryType)){
-					content = "车辆状态查询，\r\n";
-					if(!StringUtil.isEmpty(querycondition)){
-						content = content + "车牌号:" +querycondition.replace("&number=", "");
+					content = "车辆状态查询	\r\n";
+					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("number")>-1){
+						content = content + "车牌号:" +querycondition.replaceAll("&number=", "").replaceAll("&type.*", "");
+					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("type")>-1){
+						content = content + " 车辆类型:" +querycondition.replaceAll(".*&type=", "");
 					}
 				}else if("BYJL".equals(queryType)){
-					content = "维保信息查询，\r\n";
+					content = "维保信息查询	\r\n";
 					if(!StringUtil.isEmpty(querycondition)){
 						content = content + "车架号:" +querycondition.replace("&vin=", "");
 					}
 				}else if("CXJL".equals(queryType)){
-					content = "出险信息查询，\r\n";
+					content = "出险信息查询	\r\n";
 					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
 						content = content + "车牌号:" +querycondition.replaceAll("&licenseNo=", "").replaceAll("&frameNo.*", "");
 					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
 						content = content + " 车架号:" +querycondition.replaceAll(".*&frameNo=", "");
 					}
 				}else if("TBXX".equals(queryType)){
-					content = "投保信息查询，\r\n";
+					content = "投保信息查询	\r\n";
 					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){
 						content = content + "车牌号:" +querycondition.replaceAll("&licenseNo=", "").replaceAll("&carVin.*", "");
 					}else if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("carVin")>-1){

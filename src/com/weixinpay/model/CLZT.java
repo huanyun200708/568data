@@ -72,10 +72,12 @@ public class CLZT {
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		 	String queryResult = "";
 			String number = request.getParameter("number");
-			String type = request.getParameter("type");
+			String cltype = request.getParameter("cltype");
+			String cltypevalue = request.getParameter("cltypevalue");
+			
 			String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number="+number;
-			if(!StringUtil.isEmpty(type)){
-				//clzturl = clzturl+"&type="+type;
+			if(!StringUtil.isEmpty(cltype)){
+				clzturl = clzturl+"&type="+cltype;
 			}
 			HttpGet clzthttpGet = new HttpGet(clzturl);
 	        //设置请求器的配置

@@ -116,7 +116,7 @@ public class PayOff extends HttpServlet {
 					queryCondition = queryCondition+"&type="+cltypevalue;
 				}
 				CLZT.setOrderFee(request, order, memberLevel);
-order.setTotal_fee(1);//TODO Test C
+//order.setTotal_fee(1);//TODO Test C
 			}else if("BYJL".equals(payType)){
 				order.setBody("Vehicle maintenance record query");
 				String vin = request.getParameter("vin");

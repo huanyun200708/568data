@@ -1,5 +1,7 @@
 package com.weixinpay.model;
 
+import cn.com.hq.util.StringUtil;
+
 public class TBXXUserInfo {
 
 	private String CarUsedType;
@@ -71,7 +73,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setLicenseOwner(String licenseOwner) {
-		LicenseOwner = licenseOwner;
+		if(!StringUtil.isEmpty(licenseOwner)){
+			LicenseOwner = licenseOwner.substring(0, licenseOwner.length()-1)+"*";
+		}else{
+			LicenseOwner = licenseOwner;
+		}
+		
 	}
 
 	public String getInsuredName() {
@@ -79,7 +86,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setInsuredName(String insuredName) {
-		InsuredName = insuredName;
+		
+		if(!StringUtil.isEmpty(insuredName)){
+			InsuredName = insuredName.substring(0, insuredName.length()-1)+"*";
+		}else{
+			InsuredName = insuredName;
+		}
 	}
 
 	public String getPostedName() {
@@ -87,7 +99,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setPostedName(String postedName) {
-		PostedName = postedName;
+		
+		if(!StringUtil.isEmpty(postedName)){
+			PostedName = postedName.substring(0, postedName.length()-1)+"*";
+		}else{
+			PostedName = postedName;
+		}
 	}
 
 	public String getIdType() {
@@ -116,7 +133,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setCredentislasNum(String credentislasNum) {
-		CredentislasNum = credentislasNum;
+		
+		if(!StringUtil.isEmpty(credentislasNum)){
+			CredentislasNum = credentislasNum.substring(0, credentislasNum.length()-4)+"****";
+		}else{
+			CredentislasNum = credentislasNum;
+		}
 	}
 
 	public String getCityCode() {
@@ -330,7 +352,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setInsuredIdCard(String insuredIdCard) {
-		InsuredIdCard = insuredIdCard;
+		
+		if(!StringUtil.isEmpty(insuredIdCard)){
+			InsuredIdCard = insuredIdCard.substring(0, insuredIdCard.length()-4)+"****";
+		}else{
+			InsuredIdCard = insuredIdCard;
+		}
 	}
 
 	public String getInsuredIdType() {
@@ -358,7 +385,12 @@ public class TBXXUserInfo {
 	}
 
 	public void setInsuredMobile(String insuredMobile) {
-		InsuredMobile = insuredMobile;
+		
+		if(!StringUtil.isEmpty(insuredMobile)){
+			InsuredMobile = insuredMobile.substring(0, insuredMobile.length()-4)+"****";
+		}else{
+			InsuredMobile = insuredMobile;
+		}
 	}
 
 	public String getHolderIdCard() {
@@ -366,7 +398,11 @@ public class TBXXUserInfo {
 	}
 
 	public void setHolderIdCard(String holderIdCard) {
-		HolderIdCard = holderIdCard;
+		if(!StringUtil.isEmpty(holderIdCard)){
+			HolderIdCard = holderIdCard.substring(0, holderIdCard.length()-4)+"****";
+		}else{
+			HolderIdCard = holderIdCard;
+		}
 	}
 
 	public String getHolderIdType() {
@@ -394,7 +430,11 @@ public class TBXXUserInfo {
 	}
 
 	public void setHolderMobile(String holderMobile) {
-		HolderMobile = holderMobile;
+		if(!StringUtil.isEmpty(holderMobile)){
+			HolderMobile = holderMobile.substring(0, holderMobile.length()-4)+"****";
+		}else{
+			HolderMobile = holderMobile;
+		}
 	}
 
 	public String getRateFactor1() {

@@ -68,6 +68,7 @@ public class TBXX {
 		t.getResult().getSaveQuote().setHcJingShenSunShi(t.getResult().getSaveQuote().getHcJingShenSunShi());
 		t.getResult().getSaveQuote().setBjmSheBeiSunShi (t.getResult().getSaveQuote().getBjmSheBeiSunShi ());
 		
+		
 		t.getResult().getUserInfo().setCarUsedType(t.getResult().getUserInfo().getCarUsedType());
 		t.getResult().getUserInfo().setIdType(t.getResult().getUserInfo().getIdType());
 		t.getResult().getUserInfo().setCityCode(t.getResult().getUserInfo().getCityCode());
@@ -80,6 +81,15 @@ public class TBXX {
 		t.getResult().getUserInfo().setHolderIdType(t.getResult().getUserInfo().getHolderIdType());
 		t.getResult().getUserInfo().setIsPublic(t.getResult().getUserInfo().getIsPublic());
 		
+		//隐藏敏感信息
+		t.getResult().getUserInfo().setLicenseOwner(t.getResult().getUserInfo().getLicenseOwner());
+		t.getResult().getUserInfo().setInsuredName(t.getResult().getUserInfo().getInsuredName());
+		t.getResult().getUserInfo().setPostedName(t.getResult().getUserInfo().getPostedName());
+		t.getResult().getUserInfo().setCredentislasNum(t.getResult().getUserInfo().getCredentislasNum());
+		t.getResult().getUserInfo().setInsuredIdCard(t.getResult().getUserInfo().getInsuredIdCard());
+		t.getResult().getUserInfo().setInsuredMobile(t.getResult().getUserInfo().getInsuredMobile());
+		t.getResult().getUserInfo().setHolderIdCard(t.getResult().getUserInfo().getHolderIdCard());
+		t.getResult().getUserInfo().setHolderMobile(t.getResult().getUserInfo().getHolderMobile());
 		
 	}
 	

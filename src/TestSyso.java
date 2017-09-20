@@ -8,19 +8,7 @@ import cn.com.hq.util.JsonUtils;
 public class TestSyso {
 
 	public static void main(String[] args) {
-		//{"name":"a2","description":"a\"2da\"}fd\r\n\\"}
-	String str = "{\"name\":\"a2\",\"description\":\"a\\\"2da\"}fd\\\\r\\\\n\\\\\"}";
-	String sql = "SELECT name,message FROM huangqidb.account where name='";
-		sql = sql.replaceAll("huangqidb\\.", "");
-		System.out.println(sql);
-	//checkJsonStr(str);
-	/*try {
-		System.out.println(str);
-		Account a1 = JsonUtils.fromJson(str, Account.class);
-		System.out.println(a1.getDescription());
-	} catch (Exception e) {
-		e.printStackTrace();
-	}*/
+		System.out.println("吴谈".substring(0, "吴谈".length()-1)+"*");
 	}
 	public static void testRegex(){
 		String regex = "^[\u2E80-\uFE4F\\w\\_\\-\\(\\)\\.\\/\\#\\$\\%\\~\\@\\s\\:\\=\\,\\;]*$";

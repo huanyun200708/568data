@@ -148,7 +148,9 @@ public class CXJL {
 		        	 translate(cxjl);
 				     queryResult = gson.toJson(cxjl);
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
+					logger.error(StringUtil.errInfo(e));
+					logger.error("cxjl数据转换失败");
 				}
 				//queryResult = Data.CXJL.replaceAll("\\s+", " ");
 		        //queryResult = "{\"reason\":\"1:没有查到理赔记录\",\"result\":null,\"error_code\":228201}";

@@ -158,7 +158,9 @@ public class TBXX {
 		        tbxx.translate(tbxx,order.getOpenid());
 		        queryResult = gson.toJson(tbxx);
 			} catch (Exception e) {
-				// TODO: handle exception
+				e.printStackTrace();
+				logger.error(StringUtil.errInfo(e));
+				logger.error("tbxx数据转换失败");
 			}
 	        
 System.out.println("QueryResult : "+queryResult);

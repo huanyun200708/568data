@@ -102,6 +102,8 @@ public class BYJL {
 				HttpEntity entity = res.getEntity();
 				String clztresult = EntityUtils.toString(entity, "UTF-8");
 		        queryResult = clztresult;
+		        System.out.println("BYJL:\r\n" + queryResult);
+		        logger.info("BYJL:\r\n" + queryResult);
 				BYJL b = gson.fromJson(queryResult, BYJL.class);
 				order.setQueryCondition("&vin="+vin);
 				

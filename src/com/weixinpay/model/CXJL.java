@@ -137,7 +137,8 @@ public class CXJL {
 		        HttpEntity cxjentity = cxjles.getEntity();
 		        String cxjlesult = EntityUtils.toString(cxjentity, "UTF-8");
 		        queryResult = cxjlesult;
-				//queryResult = Data.CXJL;
+		        System.out.println("CXJL:\r\n" + queryResult);
+		        logger.info("CXJL:\r\n" + queryResult);
 		        CXJL cxjl = gson.fromJson(queryResult, CXJL.class);
 		        if(!"0".equals(cxjl.error_code)){
 		        	return "{\"errorMessage\":\""+cxjl.reason+"\",\"success\":false}";

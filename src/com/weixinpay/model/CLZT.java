@@ -58,8 +58,8 @@ public class CLZT {
 	        HttpResponse clzdres = clzdhttpClient.execute(clzdhttpGet);
 	        HttpEntity clzdentity = clzdres.getEntity();
 	        String clzdresult = EntityUtils.toString(clzdentity, "UTF-8");
-	        System.out.println(clzdresult);
-	        System.out.println("clzdresult : "+clzdresult);
+	        System.out.println("CLZT:\r\n" + clzdresult);
+	        logger.info("CLZT:\r\n" + clzdresult);
 	        clzdresult = clzdresult.replace("附录1", "fulu1").replace("附录2", "fulu2").replace("附录3", "fulu3").replace("附录4", "fulu4").replace("附录5", "fulu5").replace("附录6", "fulu6");
 	        CLZD c = gson.fromJson(clzdresult, CLZD.class);
 			return c;

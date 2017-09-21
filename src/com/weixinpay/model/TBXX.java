@@ -147,7 +147,8 @@ public class TBXX {
 	        String tbxxresult = EntityUtils.toString(tbxxentity, "UTF-8");
 	        System.out.println(tbxxresult);
 	        queryResult = tbxxresult;
-	       // queryResult = Data.TBXX.replaceAll("\\s+", " ");
+	        System.out.println("TBXX:\r\n" + queryResult);
+	        logger.info("TBXX:\r\n" + queryResult);
 	        try {
 	        	TBXX tbxx = gson.fromJson(queryResult, TBXX.class);
 	        	if(!"0".equals(tbxx.error_code)){

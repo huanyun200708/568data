@@ -1,2 +1,9 @@
+/DB/
+/MySecureProtocolSocketFactory/
+/c3p0-config.xml
 /cn/
 /com/
+/log4j.properties
+/property.properties
+/struts.xml
+/TestSyso.class

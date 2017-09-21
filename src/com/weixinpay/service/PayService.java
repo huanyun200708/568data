@@ -62,7 +62,7 @@ public class PayService {
 	}
 	
 	public OrderInfo getQueryOrderByorderId(String orderId){
-		String sql = "SELECT userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType,querycondition FROM 568db.finance_pay where orderid=?;";
+		String sql = "SELECT userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType,querycondition FROM 568db.finance_pay where orderid=?";
 		Connection connection =  dao.getDBConnection();
 		OrderInfo order = new OrderInfo();
 		try {
@@ -197,7 +197,7 @@ public class PayService {
 	
 	public Map<String,String> getBYJLqueryCondition(String openId,String vin){
 		Map<String,String> result = new HashMap<String,String>();
-		String sql = "select content,orderid  from 568db.finance_pay where openid=? and querycondition=CONCAT('&vin=',?)";
+		String sql = "select content,orderid  from 568db.finance_pay where openid=? and querycondition=CONCAT('&vin=',?) and content<> '' ";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {

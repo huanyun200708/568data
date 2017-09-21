@@ -10,31 +10,33 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta charset="utf-8" />
-<title>Test for EChars</title>
-<script type="application/javascript"
-	src="${pageContext.request.contextPath}/js/echart/echarts.min.js"></script>
-<script type="application/javascript"
-	src="${pageContext.request.contextPath}//js/lib/jquery-1.10.2.min.js"></script>
-<style>
-#out_box {
-	
-}
-
-#main {
-	width: 50%;
-	height: 60%;
-}
-</style>
+	<meta charset="utf-8" />
+	<title>Test for EChars</title>
+	<script type="application/javascript" src="${pageContext.request.contextPath}/lib/echart/echarts.min.js"></script>
+	<script type="application/javascript" src="${pageContext.request.contextPath}/lib/jquery/jquery-1.10.2.min.js"></script>
+	<script type="application/javascript" src="${pageContext.request.contextPath}/js/MyWebsocket.js"></script>
+	<style>
+		#out_box {
+			
+		}
+		
+		#main {
+			width: 50%;
+			height: 60%;
+		}
+	</style>
+	<%
+		session.setAttribute("userId", "u0001"); //将str 添加到session对象中
+  	%>
 </head>
 <body>
 	<div id="out_box">
 		<div id="main"></div>
 	</div>
 	<script>
-		var myChart = echarts.init(document.getElementById("main"));
-                // 指定图表的配置项和数据
-        option = {
+	var accountid = "001";
+	var myChart = echarts.init(document.getElementById("main"));
+	var option = {
         	title:{
                 text: '单位 （万ERL）',
                 left:'10%',
@@ -66,7 +68,7 @@
             xAxis: [
                 {
                     type: 'category',
-                    data: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24',],
+                    data: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24'],
                     axisPointer: {
                         type: 'shadow'
                     },
@@ -173,8 +175,23 @@
                 }
             ],
            color: ['#17D6FF', '#FFFD13', '#15CFFF', '#3DCC55', '#3DCC55', '#FF5500', '#FF5500']
-        };                // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
+        };
+	function handleMsg(massage){
+		var m = JSON.parse(massage.data);
+		option.series[0].data = m.data1;
+	    option.series[1].data = m.data2;
+	    option.series[2].data = m.data3;
+		 myChart.setOption(option);
+	}
+	$(function() {
+		var socket = new MyWebsocket("",handleMsg);
+		socket.connect();
+		myChart.setOption(option);
+	});
+	
+		
+                // 指定图表的配置项和数据
+       
 	</script>
 </body>
 </html>

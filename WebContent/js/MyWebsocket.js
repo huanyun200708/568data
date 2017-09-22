@@ -1,6 +1,7 @@
 MyWebsocket = function(wsurl,handleMassage) {
 	this.isConnectWsSuccess = false;
 	this.connect_handleMassage = handleMassage;
+	this.wsurl = wsurl;
 }
 
 MyWebsocket.prototype = {
@@ -9,9 +10,9 @@ MyWebsocket.prototype = {
 			this._closeSocket();
 			var host;
 			if (window.location.protocol == 'http:') {
-					host = 'ws://' + window.location.host + '/568data/forwardWebSocket?from='+accountid + "_" +new Date().getTime();
+					host = 'ws://' + me.wsurl;//window.location.host + '/568data/forwardWebSocket?from='+accountid + "_" +new Date().getTime();
 				} else {
-					host = 'wss://' + window.location.host + '/568data/forwardWebSocket?from='+accountid + "_" +new Date().getTime();
+					host = 'wss://' + me.wsurl;// window.location.host + '/568data/forwardWebSocket?from='+accountid + "_" +new Date().getTime();
 				}
 				if ('WebSocket' in window) {
 					this.ws = new WebSocket(host);

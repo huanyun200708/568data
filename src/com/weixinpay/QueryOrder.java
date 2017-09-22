@@ -64,7 +64,7 @@ public class QueryOrder extends HttpServlet {
 		try {
 			OrderInfo order = payService.getQueryOrderByorderId(orderId);
 			 OutputStream out = response.getOutputStream();  
-			 out.write(order.getQueryResult().getBytes("UTF-8"));  
+			 out.write(order.getQueryResult().replace("\\", "").getBytes("UTF-8"));  
 			//response.getWriter().append(result);
 		} catch (Exception e) {
 			e.printStackTrace();

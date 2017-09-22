@@ -184,7 +184,7 @@
 		 myChart.setOption(option);
 	}
 	$(function() {
-		var socket = new MyWebsocket("",handleMsg);
+		var socket = new MyWebsocket("10.72.46.133:8080/568data/forwardWebSocket?from="+accountid + "_" +new Date().getTime(),handleMsg);
 		socket.connect();
 		myChart.setOption(option);
 	});

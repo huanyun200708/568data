@@ -8,7 +8,8 @@ import cn.com.hq.util.JsonUtils;
 public class TestSyso {
 
 	public static void main(String[] args) {
-		System.out.println("吴谈".substring(0, "吴谈".length()-1)+"*");
+		System.out.println("吴\\谈adfadfs\\asd");
+		System.out.println("吴\\谈adfadfs\\\\asd".replace("\\", ""));
 	}
 	public static void testRegex(){
 		String regex = "^[\u2E80-\uFE4F\\w\\_\\-\\(\\)\\.\\/\\#\\$\\%\\~\\@\\s\\:\\=\\,\\;]*$";

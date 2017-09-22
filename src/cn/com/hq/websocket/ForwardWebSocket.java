@@ -45,7 +45,7 @@ public class ForwardWebSocket {
         this.session = session;
         nickname = session.getRequestParameterMap().get("from").get(0).toString();
         HttpSession httpSession= (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-        String userId = httpSession.getAttribute("userId").toString();
+       // String userId = httpSession.getAttribute("userId").toString();
         connections.put(nickname, this);
         sessionMap.put(session.getId(), httpSession);
         String message = String.format("* %s %s", nickname, "has joined.");

@@ -1,3 +1,7 @@
+/DB/
+/MySecureProtocolSocketFactory/
 /TestClient.class
+/TestSyso.class
+/applicationContext-server.xml
+/c3p0-config.xml
 /cn/
-/com/

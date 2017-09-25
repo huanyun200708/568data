@@ -18,6 +18,7 @@ import cn.com.hq.util.StringUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.weixinpay.service.MyRunnable;
 import com.weixinpay.service.PayService;
 
 public class BYJL {
@@ -110,6 +111,11 @@ public class BYJL {
 				if(!"0".equals(b.getError_code())){
 					order.setQueryResult("&orderId="+orderid);
 					payService.updateFinancePayContent(order);
+					if("227005".equals(b.getError_code()) || "订单创建成功，正在生成报告，请稍后再试".equals(b.getReason().trim())){
+						Runnable myRunnable = new MyRunnable(orderId);
+						Thread thread1 = new Thread(myRunnable);
+						thread1.start();
+					}
 		        	return "{\"errorMessage\":\""+b.getReason()+"\",\"submitOrder\":1}";
 		        }
 				

@@ -8,6 +8,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.client.HttpClient;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -28,6 +29,8 @@ import com.weixinpay.common.Configure;
 import com.weixinpay.common.HttpRequest;
 import com.weixinpay.common.RandomStringGenerator;
 import com.weixinpay.common.Signature;
+import com.weixinpay.model.BYJL;
+import com.weixinpay.model.CLZT;
 import com.weixinpay.model.OrderInfo;
 import com.weixinpay.model.OrderReturnInfo;
 import com.weixinpay.model.SignInfo;
@@ -41,6 +44,7 @@ import com.weixinpay.test.Data;
 public class QueryOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private PayService payService = new PayService();   
+	private static Logger logger = Logger.getLogger(QueryOrder.class);
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -61,12 +65,39 @@ public class QueryOrder extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String orderId = request.getParameter("orderId");
 		System.out.println("orderId : "+orderId);
+		 OutputStream out = response.getOutputStream();  
 		try {
 			OrderInfo order = payService.getQueryOrderByorderId(orderId);
-			 OutputStream out = response.getOutputStream();  
+			 String payType = request.getParameter("payType");
+				if("BYJL".equals(payType)){
+					String queryResult = order.getQueryResult();
+					if(queryResult.indexOf("&orderId=")>-1){
+						Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+						String juheorderid = queryResult.replace("&orderId=", "");
+						String url = QueryAppKeyLib.baoyangQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey;
+						HttpGet httpGet = new HttpGet(url +"&orderId="+ juheorderid);
+						HttpClient httpClient = SSLUtil.getHttpClient();
+						HttpResponse res = httpClient.execute(httpGet);
+						HttpEntity entity = res.getEntity();
+						String clztresult = EntityUtils.toString(entity, "UTF-8");
+				        System.out.println("BYJL--again:\r\n" + clztresult);
+				        logger.info("BYJL--again:\r\n" + clztresult);
+						BYJL b = gson.fromJson(clztresult, BYJL.class);
+						
+						if(!"0".equals(b.getError_code())){
+				        	out.write(("{\"errorMessage\":\""+b.getReason()+"\",\"submitOrder\":1}").getBytes("UTF-8"));  
+				        }else{
+				        	order.setQueryResult(clztresult.replace("\\", ""));
+				        	payService.updateFinancePayContent(order);
+				        	 out.write(order.getQueryResult().replace("\\", "").getBytes("UTF-8"));  
+				        	return;
+				        }
+					}
+				}
 			 out.write(order.getQueryResult().replace("\\", "").getBytes("UTF-8"));  
 			//response.getWriter().append(result);
 		} catch (Exception e) {
+			out.write(("{\"errorMessage\":\"查询出错\",\"submitOrder\":1}").getBytes("UTF-8"));  
 			e.printStackTrace();
 		}
 	}

@@ -109,6 +109,7 @@ public class PayService {
 				String queryType = rs.getString(3);
 				String querycondition = rs.getString(4);
 				String content = "";
+				String content1 = rs.getString(5);
 				
 				DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
 				Date d = format2.parse(paytime);
@@ -130,6 +131,9 @@ public class PayService {
 					content = "维保信息查询	\r\n";
 					if(!StringUtil.isEmpty(querycondition)){
 						content = content + "车架号:" +querycondition.replace("&vin=", "");
+					}
+					if(content1.indexOf("&orderId=")>-1){
+						content1 = "正在查询";
 					}
 				}else if("CXJL".equals(queryType)){
 					content = "出险信息查询	\r\n";
@@ -154,6 +158,7 @@ public class PayService {
 				json.put("queryType", queryType);
 				json.put("querycondition", querycondition);
 				json.put("content", content);
+				json.put("content1", content1);
 				
 				results.add(json);
 		    }

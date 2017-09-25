@@ -115,6 +115,7 @@ public class BYJL {
 						Runnable myRunnable = new MyRunnable(orderId);
 						Thread thread1 = new Thread(myRunnable);
 						thread1.start();
+						return "{\"errorMessage\":\"报告生成中，耐心等待1分钟，请在记录里查看记录详情\",\"submitOrder\":1}";
 					}
 		        	return "{\"errorMessage\":\""+b.getReason()+"\",\"submitOrder\":1}";
 		        }

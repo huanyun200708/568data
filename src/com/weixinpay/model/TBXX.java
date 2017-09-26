@@ -47,6 +47,7 @@ public class TBXX {
 		t.getResult().getSaveQuote().setSource(t.getResult().getSaveQuote().getSource());
 		t.getResult().getSaveQuote().setHcXiuLiChangType(t.getResult().getSaveQuote().getHcXiuLiChangType());
 		t.getResult().getSaveQuote().setBoLi(t.getResult().getSaveQuote().getBoLi());
+		/*
 		t.getResult().getSaveQuote().setCheSun(t.getResult().getSaveQuote().getCheSun());
 		t.getResult().getSaveQuote().setSanZhe(t.getResult().getSaveQuote().getSanZhe());
 		t.getResult().getSaveQuote().setDaoQiang(t.getResult().getSaveQuote().getDaoQiang());
@@ -67,7 +68,7 @@ public class TBXX {
 		t.getResult().getSaveQuote().setHcSanFangTeYue(t.getResult().getSaveQuote().getHcSanFangTeYue());
 		t.getResult().getSaveQuote().setHcJingShenSunShi(t.getResult().getSaveQuote().getHcJingShenSunShi());
 		t.getResult().getSaveQuote().setBjmSheBeiSunShi (t.getResult().getSaveQuote().getBjmSheBeiSunShi ());
-		
+		*/
 		
 		t.getResult().getUserInfo().setCarUsedType(t.getResult().getUserInfo().getCarUsedType());
 		t.getResult().getUserInfo().setIdType(t.getResult().getUserInfo().getIdType());

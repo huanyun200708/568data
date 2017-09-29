@@ -77,33 +77,33 @@ public class CLZT {
 			String state0 = c.getResult().getState();//fulu5
 			String state = "";
 			for(char ch : state0.toCharArray()){
-				state = state + clzd.getFulu5().get(ch+"") + " ";
+				state = state + StringUtil.getValueFromMap(ch+"", clzd.getFulu5()) + " ";
 			}
 			c.getResult().setState(state);
 			
 			String properties0 = c.getResult().getProperties();//fulu4
 			String properties =  "";
 			for(char ch : properties0.toCharArray()){
-				properties = properties + clzd.getFulu4().get(ch+"") + " ";
+				properties = properties +  StringUtil.getValueFromMap(ch+"", clzd.getFulu4()) + " ";
 			}
 			c.getResult().setProperties(properties);
 			
 			String color0 = c.getResult().getColor();//fulu3
 			String color = "";
 			for(char ch : color0.toCharArray()){
-				color = color + clzd.getFulu3().get(ch+"") ;
+				color = color + StringUtil.getValueFromMap(ch+"", clzd.getFulu3()) ;
 			}
 			c.getResult().setColor(color);
 			
 			String fuel0 = c.getResult().getFuel();//fulu6
 			String fuel = "";
 			for(char ch : fuel0.toCharArray()){
-				fuel = fuel + clzd.getFulu6().get(ch+"") ;
+				fuel = fuel + StringUtil.getValueFromMap(ch+"", clzd.getFulu6());
 			}
 			c.getResult().setFuel(fuel);
 			
 			String vehicleType = c.getResult().getVehicleType();//fulu2
-			c.getResult().setVehicleType(clzd.getFulu2().get(vehicleType));
+			c.getResult().setVehicleType(StringUtil.getValueFromMap(vehicleType+"", clzd.getFulu2()));
 			return;
 		}
 		c.getResult().setState(c.getResult().getState());
@@ -154,7 +154,8 @@ public class CLZT {
 					 c.translate(c);
 				     queryResult = gson.toJson(c);
 				} catch (Exception e) {
-					// TODO: handle exception
+					logger.error(StringUtil.errInfo(e));
+					logger.error("车辆状态转换失败");
 				}
 		       
 System.out.println("QueryResult : "+queryResult);

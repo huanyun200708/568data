@@ -913,6 +913,15 @@ public final class StringUtil
         
     }
     
+    public static String getValueFromMap(String key,Map<String ,String> map)
+    {
+        if(map.get(key) != null){
+        	return map.get(key);
+        }
+    	 return key;
+        
+    }
+    
     /**
      * 处理文件名字中的特殊字符
      * 
@@ -946,16 +955,7 @@ public final class StringUtil
         
     }
     
-    /** 
-     * get String
-     * @param str str
-     * @return String
-     * @see [类、类#方法、类#成员]
-     */
-    public static String getString(String str)
-    {
-        return str == null ? "" : str;
-    }
+
     
     /**
      * 解析String

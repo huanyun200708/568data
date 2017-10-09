@@ -23,7 +23,7 @@ public class MyRunnable  implements Runnable {
 	private static Logger logger = Logger.getLogger(MyRunnable.class);
     @Override
     public void run() {
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < 12; i++) {
         	try {
         	OrderInfo order = payService.getQueryOrderByorderId(orderId);
 					String queryResult = order.getQueryResult();

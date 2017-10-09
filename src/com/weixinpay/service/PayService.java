@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.weixinpay.model.OrderInfo;
+import com.weixinpay.model.OrderInfoView;
 
 import cn.com.hq.dao.Dao;
 import cn.com.hq.util.PropertiesUtils;
@@ -78,6 +79,37 @@ public class PayService {
 				order.setQueryResult(rs.getString(8));
 				order.setQueryCondition(rs.getString(11));
 				order.setQueryType(rs.getString(10));
+				break;
+		    }
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return order;
+	}
+	
+	public OrderInfoView getQueryOrderViewByorderId(String orderId){
+		String sql = "SELECT userid,openid,orderid,fee,paytime,ip,title,content,confirmTime,queryType,querycondition FROM 568db.finance_pay where orderid=?";
+		Connection connection =  dao.getDBConnection();
+		OrderInfoView order = new OrderInfoView();
+		try {
+			PreparedStatement ps = connection.prepareStatement(sql);
+			ps.setString(1, orderId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				order.setUserid(rs.getString(1));
+				order.setOpenid(rs.getString(2));
+				order.setOrderid(rs.getString(3));
+				order.setFee(rs.getInt(4));
+				order.setPaytime(rs.getString(5));
+				order.setIp(rs.getString(6));
+				order.setTitle(rs.getString(7));
+				order.setContent(rs.getString(8));
+				order.setConfirmTime(rs.getInt(9));
+				order.setQueryType(rs.getString(10));
+				order.setQuerycondition(rs.getString(11));
+				
 				break;
 		    }
 			dao.closeStatement(ps);
@@ -191,6 +223,23 @@ public class PayService {
 			ps.setInt(9, -1);
 			ps.setString(10, orderInfo.getQueryType());
 			ps.setString(11, orderInfo.getQueryCondition()==null?"":orderInfo.getQueryCondition());
+			result = ps.executeUpdate() > 0;
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	public boolean insertWXMessage(String content){
+		boolean result = false;
+		String sql = "INSERT INTO  568db.wx_message (message_content,issend) VALUES (?,'N')";
+		Connection connection =  dao.getDBConnection();
+		PreparedStatement  ps;
+		try {
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, content);
 			result = ps.executeUpdate() > 0;
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);

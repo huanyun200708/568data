@@ -77,9 +77,9 @@ public class BYJL {
 			Map<String,String> resultMap = payService.getBYJLqueryCondition(order.getOpenid(), vin);
 			String condition = resultMap.get("condition");
 	        //设置请求器的配置
-			String orderid = "";
+			String orderid = "896313001507621971";
 			try {
-				if(StringUtil.isEmpty(condition) || condition.indexOf("result")>-1){
+				/*if(StringUtil.isEmpty(condition) || condition.indexOf("result")>-1){
 					HttpGet httpGet = new HttpGet(orderurl);
 					HttpClient httpClient = SSLUtil.getHttpClient();
 			        HttpResponse res = httpClient.execute(httpGet);
@@ -96,7 +96,7 @@ public class BYJL {
 					//Thread.sleep(5000);
 				}else{
 					orderid = condition.replace("&orderId=", "");
-				}
+				}*/
 				HttpGet httpGet = new HttpGet(url +"&orderId="+ orderid);
 				HttpClient httpClient = SSLUtil.getHttpClient();
 				HttpResponse res = httpClient.execute(httpGet);

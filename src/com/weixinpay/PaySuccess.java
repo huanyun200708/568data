@@ -48,6 +48,7 @@ public class PaySuccess extends HttpServlet {
 			}else if("TBXX".equals(payType)){
 				queryResult = TBXX.queryResult(request, orderId);
 			}
+			queryResult = queryResult.replace("\\\"", "");
 			//查询失败,进行退款处理
 			if(queryResult.indexOf("errorMessage")>-1){
 				logger.error("---PaySuccess --- 调用聚数接口查询失败");

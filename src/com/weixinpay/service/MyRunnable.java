@@ -41,7 +41,7 @@ public class MyRunnable  implements Runnable {
 						BYJL b = gson.fromJson(clztresult, BYJL.class);
 						
 						if("0".equals(b.getError_code())){
-							order.setQueryResult(clztresult.replace("\\", ""));
+							order.setQueryResult(clztresult.replace("\\", "").replace("\\\"", ""));
 				        	payService.updateFinancePayContent(order);
 				        	return;
 				        }

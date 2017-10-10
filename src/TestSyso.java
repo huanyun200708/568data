@@ -8,7 +8,7 @@ import cn.com.hq.util.JsonUtils;
 public class TestSyso {
 
 	public static void main(String[] args) {
-		System.out.println((1*1.00/100));
+		System.out.println("\\\"+1\\\"".replace("\\\"", "'"));
 		System.out.println("吴\\谈adfadfs\\\\asd".replace("\\", ""));
 	}
 	public static void testRegex(){

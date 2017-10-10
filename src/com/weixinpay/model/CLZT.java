@@ -147,8 +147,11 @@ public class CLZT {
 		        queryResult = clztresult;
 				/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
 				CLZT c = gson.fromJson(queryResult, CLZT.class);
-				if(!"0".equals(c.error_code)){
+				if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code) || "227103".equals(c.error_code)){
 					return "{\"errorMessage\":\""+c.reason+"\",\"success\":false}";
+		        }
+				if(!"0".equals(c.error_code)){
+					return "{\"errorMessage\":\""+c.reason+"\",\"submitOrder\":1,\"success\":false}";
 		        }
 				try {
 					 c.translate(c);

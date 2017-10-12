@@ -22,6 +22,157 @@ public class CLZTResult {
 	private String vehicleType;
 	private String cc         ;
 	private String man        ;
+	
+	private String listDate     ;
+	private String demio        ;
+	private String shiftDesc    ;
+	private String listMonth    ;
+	private String effluentNorm ;
+	private String carForm      ;
+	private String vinDate      ;
+	private String carCode      ;
+	private String MJ           ;
+	private String doorCount    ;
+	private String fuelCode     ;
+	private String brandName    ;
+	private String shiftType    ;
+	private String sellName     ;
+	private String carLevel     ;
+	private String dricerWay    ;
+	private String gearsCount   ;
+	private String guidePrice   ;
+	private String MaxPower     ;
+	private String vatCount     ;
+	private String stopDate     ;
+
+	
+	
+	public String getListDate() {
+		return listDate;
+	}
+	public void setListDate(String listDate) {
+		this.listDate = listDate;
+	}
+	public String getDemio() {
+		return demio;
+	}
+	public void setDemio(String demio) {
+		this.demio = demio;
+	}
+	public String getShiftDesc() {
+		return shiftDesc;
+	}
+	public void setShiftDesc(String shiftDesc) {
+		this.shiftDesc = shiftDesc;
+	}
+	public String getListMonth() {
+		return listMonth;
+	}
+	public void setListMonth(String listMonth) {
+		this.listMonth = listMonth;
+	}
+	public String getEffluentNorm() {
+		return effluentNorm;
+	}
+	public void setEffluentNorm(String effluentNorm) {
+		this.effluentNorm = effluentNorm;
+	}
+	public String getCarForm() {
+		return carForm;
+	}
+	public void setCarForm(String carForm) {
+		this.carForm = carForm;
+	}
+	public String getVinDate() {
+		return vinDate;
+	}
+	public void setVinDate(String vinDate) {
+		this.vinDate = vinDate;
+	}
+	public String getCarCode() {
+		return carCode;
+	}
+	public void setCarCode(String carCode) {
+		this.carCode = carCode;
+	}
+	public String getMJ() {
+		return MJ;
+	}
+	public void setMJ(String mJ) {
+		MJ = mJ;
+	}
+	public String getDoorCount() {
+		return doorCount;
+	}
+	public void setDoorCount(String doorCount) {
+		this.doorCount = doorCount;
+	}
+	public String getFuelCode() {
+		return fuelCode;
+	}
+	public void setFuelCode(String fuelCode) {
+		this.fuelCode = fuelCode;
+	}
+	public String getBrandName() {
+		return brandName;
+	}
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+	public String getShiftType() {
+		return shiftType;
+	}
+	public void setShiftType(String shiftType) {
+		this.shiftType = shiftType;
+	}
+	public String getSellName() {
+		return sellName;
+	}
+	public void setSellName(String sellName) {
+		this.sellName = sellName;
+	}
+	public String getCarLevel() {
+		return carLevel;
+	}
+	public void setCarLevel(String carLevel) {
+		this.carLevel = carLevel;
+	}
+	public String getDricerWay() {
+		return dricerWay;
+	}
+	public void setDricerWay(String dricerWay) {
+		this.dricerWay = dricerWay;
+	}
+	public String getGearsCount() {
+		return gearsCount;
+	}
+	public void setGearsCount(String gearsCount) {
+		this.gearsCount = gearsCount;
+	}
+	public String getGuidePrice() {
+		return guidePrice;
+	}
+	public void setGuidePrice(String guidePrice) {
+		this.guidePrice = guidePrice;
+	}
+	public String getMaxPower() {
+		return MaxPower;
+	}
+	public void setMaxPower(String maxPower) {
+		MaxPower = maxPower;
+	}
+	public String getVatCount() {
+		return vatCount;
+	}
+	public void setVatCount(String vatCount) {
+		this.vatCount = vatCount;
+	}
+	public String getStopDate() {
+		return stopDate;
+	}
+	public void setStopDate(String stopDate) {
+		this.stopDate = stopDate;
+	}
 	public String getEngine() {
 		return engine;
 	}

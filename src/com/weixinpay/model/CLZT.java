@@ -149,9 +149,9 @@ public class CLZT {
 				CLZT c = gson.fromJson(queryResult, CLZT.class);
 				
 				//以下错误码不收费
-				if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code)){
-					return "{\"errorMessage\":\""+c.reason+"\",\"success\":false}";
-		        }
+//				if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code)){
+//					return "{\"errorMessage\":\""+c.reason+"\",\"success\":false}";
+//		        }
 				if(!"0".equals(c.error_code)){
 					return "{\"errorMessage\":\""+c.reason+"\",\"submitOrder\":1,\"success\":false}";
 		        }

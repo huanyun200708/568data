@@ -147,7 +147,9 @@ public class CLZT {
 		        queryResult = clztresult;
 				/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
 				CLZT c = gson.fromJson(queryResult, CLZT.class);
-				if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code) || "227103".equals(c.error_code)){
+				
+				//以下错误码不收费
+				if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code)){
 					return "{\"errorMessage\":\""+c.reason+"\",\"success\":false}";
 		        }
 				if(!"0".equals(c.error_code)){
@@ -173,6 +175,47 @@ System.out.println("QueryResult : "+queryResult);
 	 }
 	
 	public static void main(String[] args) {
-		new CLZT().getCheLiangZiDian();
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
+	 	String queryResult = "";
+		String number = "沪C22B19";
+		String cltype = "02";
+		
+		String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number="+number;
+		if(!StringUtil.isEmpty(cltype)){
+			clzturl = clzturl+"&type="+cltype;
+		}
+		HttpGet clzthttpGet = new HttpGet(clzturl);
+        //设置请求器的配置
+		try {
+			HttpClient clzthttpClient = SSLUtil.getHttpClient();
+	        HttpResponse clztres = clzthttpClient.execute(clzthttpGet);
+	        HttpEntity clztentity = clztres.getEntity();
+	        String clztresult = EntityUtils.toString(clztentity, "UTF-8");
+	        System.out.println(clztresult);
+	        queryResult = clztresult;
+			/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
+			CLZT c = gson.fromJson(queryResult, CLZT.class);
+			if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code) || "227103".equals(c.error_code)){
+				System.out.println();
+	        }
+			if(!"0".equals(c.error_code)){
+				System.out.println("{\"errorMessage\":\""+c.reason+"\",\"submitOrder\":1,\"success\":false}");
+	        }
+			try {
+				 c.translate(c);
+			     queryResult = gson.toJson(c);
+			} catch (Exception e) {
+				logger.error(StringUtil.errInfo(e));
+				logger.error("车辆状态转换失败");
+			}
+	       
+System.out.println("QueryResult : "+queryResult);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(StringUtil.errInfo(e));
+			logger.error("车辆查询失败");
+		}
+		
+
 	}
 }

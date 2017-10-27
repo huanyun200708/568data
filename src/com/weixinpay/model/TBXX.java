@@ -127,18 +127,18 @@ public class TBXX {
 		String renewalCarType = request.getParameter("renewalCarType");
 		String tbxxurl = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
 		
-		if(!StringUtil.isEmpty(licenseNo)){
-			tbxxurl = tbxxurl+"&licenseNo="+licenseNo;
-		}
-		if(!StringUtil.isEmpty(carVin)){
-			tbxxurl = tbxxurl+"&carVin="+carVin;
-		}
-		if(!StringUtil.isEmpty(engineNo)){
-			tbxxurl = tbxxurl+"&engineNo="+engineNo;
-		}
-		if(!StringUtil.isEmpty(renewalCarType)){
-			tbxxurl = tbxxurl+"&renewalCarType="+renewalCarType;
-		}
+		 if (!StringUtil.isEmpty(licenseNo)) {
+	      tbxxurl = tbxxurl + "&licenseNo=" + licenseNo.trim();
+	    }
+	    if (!StringUtil.isEmpty(carVin)) {
+	      tbxxurl = tbxxurl + "&carVin=" + carVin.trim();
+	    }
+	    if (!StringUtil.isEmpty(engineNo)) {
+	      tbxxurl = tbxxurl + "&engineNo=" + engineNo.trim();
+	    }
+	    if (!StringUtil.isEmpty(renewalCarType)) {
+	      tbxxurl = tbxxurl + "&renewalCarType=" + renewalCarType.trim();
+	    }
 		HttpGet tbxxhttpGet = new HttpGet(tbxxurl);
         //设置请求器的配置
 		try {

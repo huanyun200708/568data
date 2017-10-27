@@ -127,15 +127,15 @@ public class CLZT {
 	}
 	public static String queryResult(HttpServletRequest request,String orderId){
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
-		 	String queryResult = "";
-			String number = request.getParameter("number");
-			String cltype = request.getParameter("cltype");
-			String cltypevalue = request.getParameter("cltypevalue");
-			
-			String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number="+number;
-			if(!StringUtil.isEmpty(cltype)){
-				clzturl = clzturl+"&type="+cltype;
-			}
+		 	 String queryResult = "";
+		     String number = request.getParameter("number").trim();
+		     String cltype = request.getParameter("cltype");
+		     String cltypevalue = request.getParameter("cltypevalue");
+
+		     String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl + "key=" + QueryAppKeyLib.cheliangzhuangtaiQueryAppKey + "&number=" + number;
+		     if (!StringUtil.isEmpty(cltype)) {
+		       clzturl = clzturl + "&type=" + cltype.trim();
+		     }
 			HttpGet clzthttpGet = new HttpGet(clzturl);
 	        //设置请求器的配置
 			try {
@@ -144,6 +144,7 @@ public class CLZT {
 		        HttpEntity clztentity = clztres.getEntity();
 		        String clztresult = EntityUtils.toString(clztentity, "UTF-8");
 		        System.out.println(clztresult);
+		        logger.info(clztresult);
 		        queryResult = clztresult;
 				/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
 				CLZT c = gson.fromJson(queryResult, CLZT.class);
@@ -164,6 +165,7 @@ public class CLZT {
 				}
 		       
 System.out.println("QueryResult : "+queryResult);
+logger.info("QueryResult : "+queryResult);
 			} catch (Exception e) {
 				e.printStackTrace();
 				logger.error(StringUtil.errInfo(e));
@@ -174,48 +176,5 @@ System.out.println("QueryResult : "+queryResult);
 		return queryResult;
 	 }
 	
-	public static void main(String[] args) {
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
-	 	String queryResult = "";
-		String number = "沪C22B19";
-		String cltype = "02";
-		
-		String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl+"key="+QueryAppKeyLib.cheliangzhuangtaiQueryAppKey+"&number="+number;
-		if(!StringUtil.isEmpty(cltype)){
-			clzturl = clzturl+"&type="+cltype;
-		}
-		HttpGet clzthttpGet = new HttpGet(clzturl);
-        //设置请求器的配置
-		try {
-			HttpClient clzthttpClient = SSLUtil.getHttpClient();
-	        HttpResponse clztres = clzthttpClient.execute(clzthttpGet);
-	        HttpEntity clztentity = clztres.getEntity();
-	        String clztresult = EntityUtils.toString(clztentity, "UTF-8");
-	        System.out.println(clztresult);
-	        queryResult = clztresult;
-			/*queryResult = Data.CLZT.replaceAll("\\s+", " ");*/
-			CLZT c = gson.fromJson(queryResult, CLZT.class);
-			if("227100".equals(c.error_code) || "227101".equals(c.error_code) || "227102".equals(c.error_code) || "227103".equals(c.error_code)){
-				System.out.println();
-	        }
-			if(!"0".equals(c.error_code)){
-				System.out.println("{\"errorMessage\":\""+c.reason+"\",\"submitOrder\":1,\"success\":false}");
-	        }
-			try {
-				 c.translate(c);
-			     queryResult = gson.toJson(c);
-			} catch (Exception e) {
-				logger.error(StringUtil.errInfo(e));
-				logger.error("车辆状态转换失败");
-			}
-	       
-System.out.println("QueryResult : "+queryResult);
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(StringUtil.errInfo(e));
-			logger.error("车辆查询失败");
-		}
-		
-
-	}
+	public static void main(String[] args) {}
 }

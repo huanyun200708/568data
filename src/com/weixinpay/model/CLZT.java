@@ -128,13 +128,13 @@ public class CLZT {
 	public static String queryResult(HttpServletRequest request,String orderId){
 		 	Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		 	 String queryResult = "";
-		     String number = request.getParameter("number").trim();
+		     String number = request.getParameter("number").replaceAll("\\s", "");
 		     String cltype = request.getParameter("cltype");
 		     String cltypevalue = request.getParameter("cltypevalue");
 
 		     String clzturl = QueryAppKeyLib.cheliangzhuangtaiQueryUrl + "key=" + QueryAppKeyLib.cheliangzhuangtaiQueryAppKey + "&number=" + number;
 		     if (!StringUtil.isEmpty(cltype)) {
-		       clzturl = clzturl + "&type=" + cltype.trim();
+		       clzturl = clzturl + "&type=" + cltype.replaceAll("\\s", "");
 		     }
 			HttpGet clzthttpGet = new HttpGet(clzturl);
 	        //设置请求器的配置

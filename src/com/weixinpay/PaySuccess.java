@@ -77,7 +77,8 @@ public class PaySuccess extends HttpServlet {
 		} catch (Exception e) {
 			logger.error(StringUtil.errInfo(e));
 			e.printStackTrace();
-			response.getWriter().append("{\"errorMessage\":\"paySucess error\",\"success\":false}");
+			OutputStream out = response.getOutputStream();  
+			out.write("{\"errorMessage\":\"支付失败！ 请检查输入信息是否正确\",\"success\":false}".getBytes("UTF-8"));  
 		}
 		logger.info("---PaySuccess end---");
 	}

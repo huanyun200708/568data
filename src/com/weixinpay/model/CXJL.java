@@ -125,10 +125,10 @@ public class CXJL {
 			String frameNo = request.getParameter("frameNo");
 			String cxjlurl = QueryAppKeyLib.chuxianjiluQueryUrl+"key="+QueryAppKeyLib.chuxianjiluQueryAppKey;
 			if (!StringUtil.isEmpty(licenseNo)) {
-		      cxjlurl = cxjlurl + "&licenseNo=" + licenseNo.trim();
+		      cxjlurl = cxjlurl + "&licenseNo=" + licenseNo.replaceAll("\\s", "");
 		    }
 		    if (!StringUtil.isEmpty(frameNo)) {
-		      cxjlurl = cxjlurl + "&frameNo=" + frameNo.trim();
+		      cxjlurl = cxjlurl + "&frameNo=" + frameNo.replaceAll("\\s", "");
 		    }
 			HttpGet cxjhttpGet = new HttpGet(cxjlurl);
 			try {

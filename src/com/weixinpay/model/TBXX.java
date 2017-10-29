@@ -83,7 +83,7 @@ public class TBXX {
 		t.getResult().getUserInfo().setIsPublic(t.getResult().getUserInfo().getIsPublic());
 		
 		//隐藏敏感信息
-		String SupermanOpenId = PropertiesUtils.getPropertyValueByKey("SupermanOpenId");
+	/*	String SupermanOpenId = PropertiesUtils.getPropertyValueByKey("SupermanOpenId");
 		if(!StringUtil.isEmpty(SupermanOpenId)){
 			String [] sman = SupermanOpenId.split(",");
 			for(String s : sman){
@@ -92,7 +92,10 @@ public class TBXX {
 					break;
 				}
 			}
-		}
+		}*/
+		
+		t.getResult().getUserInfo().setHideInfo(false);
+		
 		t.getResult().getUserInfo().setLicenseOwner(t.getResult().getUserInfo().getLicenseOwner());
 		t.getResult().getUserInfo().setInsuredName(t.getResult().getUserInfo().getInsuredName());
 		t.getResult().getUserInfo().setPostedName(t.getResult().getUserInfo().getPostedName());
@@ -128,16 +131,16 @@ public class TBXX {
 		String tbxxurl = QueryAppKeyLib.toubaoxinxiQueryUrl+"key="+QueryAppKeyLib.toubaoxinxiQueryAppKey;
 		
 		 if (!StringUtil.isEmpty(licenseNo)) {
-	      tbxxurl = tbxxurl + "&licenseNo=" + licenseNo.trim();
+	      tbxxurl = tbxxurl + "&licenseNo=" + licenseNo.replaceAll("\\s", "");
 	    }
 	    if (!StringUtil.isEmpty(carVin)) {
-	      tbxxurl = tbxxurl + "&carVin=" + carVin.trim();
+	      tbxxurl = tbxxurl + "&carVin=" + carVin.replaceAll("\\s", "");
 	    }
 	    if (!StringUtil.isEmpty(engineNo)) {
-	      tbxxurl = tbxxurl + "&engineNo=" + engineNo.trim();
+	      tbxxurl = tbxxurl + "&engineNo=" + engineNo.replaceAll("\\s", "");
 	    }
 	    if (!StringUtil.isEmpty(renewalCarType)) {
-	      tbxxurl = tbxxurl + "&renewalCarType=" + renewalCarType.trim();
+	      tbxxurl = tbxxurl + "&renewalCarType=" + renewalCarType.replaceAll("\\s", "");
 	    }
 		HttpGet tbxxhttpGet = new HttpGet(tbxxurl);
         //设置请求器的配置

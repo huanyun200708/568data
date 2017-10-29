@@ -70,7 +70,7 @@ public class BYJL {
 		 	OrderInfo order = payService.getQueryOrderByorderId(orderId);
 		 	String queryResult = "";
 			String vin = request.getParameter("vin");
-			String orderurl = QueryAppKeyLib.baoyangOrderUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&vin="+vin.trim();
+			String orderurl = QueryAppKeyLib.baoyangOrderUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey+"&vin="+vin.replaceAll("\\s", "");
 			String url = QueryAppKeyLib.baoyangQueryUrl+"key="+QueryAppKeyLib.baoyangQueryAppKey;
 			order.setQueryCondition("&vin="+vin);
 			//order.setOpenid("oUm4A0UA7pG6t-TQUVsLQqRppNl8");

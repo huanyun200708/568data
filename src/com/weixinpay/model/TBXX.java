@@ -78,8 +78,8 @@ public class TBXX {
 		t.getResult().getUserInfo().setLicenseColor(t.getResult().getUserInfo().getLicenseColor());
 		t.getResult().getUserInfo().setClauseType(t.getResult().getUserInfo().getClauseType());
 		t.getResult().getUserInfo().setRunRegion(t.getResult().getUserInfo().getRunRegion());
-		t.getResult().getUserInfo().setInsuredIdType(t.getResult().getUserInfo().getInsuredIdType());
-		t.getResult().getUserInfo().setHolderIdType(t.getResult().getUserInfo().getHolderIdType());
+		/*t.getResult().getUserInfo().setInsuredIdType(t.getResult().getUserInfo().getInsuredIdType());
+		t.getResult().getUserInfo().setHolderIdType(t.getResult().getUserInfo().getHolderIdType());*/
 		t.getResult().getUserInfo().setIsPublic(t.getResult().getUserInfo().getIsPublic());
 		
 		//隐藏敏感信息
@@ -97,13 +97,13 @@ public class TBXX {
 		t.getResult().getUserInfo().setHideInfo(false);
 		
 		t.getResult().getUserInfo().setLicenseOwner(t.getResult().getUserInfo().getLicenseOwner());
-		t.getResult().getUserInfo().setInsuredName(t.getResult().getUserInfo().getInsuredName());
+		/*t.getResult().getUserInfo().setInsuredName(t.getResult().getUserInfo().getInsuredName());
 		t.getResult().getUserInfo().setPostedName(t.getResult().getUserInfo().getPostedName());
 		t.getResult().getUserInfo().setCredentislasNum(t.getResult().getUserInfo().getCredentislasNum());
 		t.getResult().getUserInfo().setInsuredIdCard(t.getResult().getUserInfo().getInsuredIdCard());
 		t.getResult().getUserInfo().setInsuredMobile(t.getResult().getUserInfo().getInsuredMobile());
 		t.getResult().getUserInfo().setHolderIdCard(t.getResult().getUserInfo().getHolderIdCard());
-		t.getResult().getUserInfo().setHolderMobile(t.getResult().getUserInfo().getHolderMobile());
+		t.getResult().getUserInfo().setHolderMobile(t.getResult().getUserInfo().getHolderMobile());*/
 		
 	}
 	

@@ -20,10 +20,10 @@ public class TBXXUserInfo {
 	private String CarUsedType;
 	private String LicenseNo;
 	private String LicenseOwner;
-	private String InsuredName;
-	private String PostedName;
+	//private String InsuredName;
+	//private String PostedName;
 	private String IdType;
-	private String CredentislasNum;
+	//private String CredentislasNum;
 	private String CityCode;
 	private String EngineNo;
 	private String ModleName;
@@ -40,12 +40,12 @@ public class TBXXUserInfo {
 	private String LicenseColor;
 	private String ClauseType;
 	private String RunRegion;
-	private String InsuredIdCard;
-	private String InsuredIdType;
-	private String InsuredMobile;
-	private String HolderIdCard;
-	private String HolderIdType;
-	private String HolderMobile;
+	//private String InsuredIdCard;
+	//private String InsuredIdType;
+	//private String InsuredMobile;
+	//private String HolderIdCard;
+	//private String HolderIdType;
+	//private String HolderMobile;
 	private String RateFactor1;
 	private String RateFactor2;
 	private String RateFactor3;
@@ -61,6 +61,9 @@ public class TBXXUserInfo {
 	}
 //,1:家庭自用车(默认),2:党政机关、事业团体,3:非营业企业客车,4:不区分营业非营业(仅支持人保报价),5:出租租赁(仅支持人保报价),6:营业货车(仅支持人保报价),7:非营业货车(仅支持人保报价),8: 城市公交
 	public void setCarUsedType(String carUsedType) {
+		if(carUsedType == null){
+			CarUsedType = "";
+		}
 		switch (carUsedType) {
 		case "2": CarUsedType="党政机关、事业团体";break;
 		case "3": CarUsedType="非营业企业客车";break;
@@ -94,7 +97,7 @@ public class TBXXUserInfo {
 		
 	}
 
-	public String getInsuredName() {
+	/*public String getInsuredName() {
 		return InsuredName;
 	}
 
@@ -118,7 +121,7 @@ public class TBXXUserInfo {
 		}else{
 			PostedName = postedName;
 		}
-	}
+	}*/
 
 	public String getIdType() {
 		return IdType;
@@ -126,6 +129,9 @@ public class TBXXUserInfo {
 
 	//0:没有取到,1:身份证,2: 组织机构代码证,3:护照,4:军官证,5:港澳回乡证或台胞证,6:其他,7:港澳通行证,8:出生证,9: 营业执照(社会统一信用代码),10:税务登记证
 	public void setIdType(String idType) {
+		if(idType == null){
+			idType = "";
+		}
 		switch (idType) {
 			case "1": IdType="身份证";break;
 			case "2": IdType="组织机构代码证";break;
@@ -141,7 +147,7 @@ public class TBXXUserInfo {
 		}
 	}
 
-	public String getCredentislasNum() {
+	/*public String getCredentislasNum() {
 		return CredentislasNum;
 	}
 
@@ -152,7 +158,7 @@ public class TBXXUserInfo {
 		}else{
 			CredentislasNum = credentislasNum;
 		}
-	}
+	}*/
 
 	public String getCityCode() {
 		return CityCode;
@@ -194,6 +200,9 @@ public static void main(String[] args) {
 		if(zd != null){
 			CityCode = zd.getResult().get(cityCode);
 			return;
+		}
+		if(CityCode == null){
+			CityCode = "";
 		}
 		switch (cityCode) {
 			case "1"	: CityCode="北京"   ; break;
@@ -320,6 +329,9 @@ public static void main(String[] args) {
 	}
 
 	public void setFuelType(String fuelType) {
+		if(fuelType == null){
+			fuelType = "";
+		}
 		switch (fuelType) {
 			case "1"	: FuelType="汽油"   ; break;
 			case "2"	: FuelType="柴油"   ; break;
@@ -340,6 +352,9 @@ public static void main(String[] args) {
 	}
 
 	public void setProofType(String proofType) {
+		if(proofType == null){
+			proofType = "";
+		}
 		switch (proofType) {
 		case "1"	: ProofType="非营业用汽车用品"   ; break;
 		case "2"	: ProofType="家庭自用汽车产品"   ; break;
@@ -356,6 +371,9 @@ public static void main(String[] args) {
 	}
 
 	public void setLicenseColor(String licenseColor) {
+		if(licenseColor == null){
+			licenseColor = "";
+		}
 		switch (licenseColor) {
 			case "1"	: LicenseColor="蓝"   ; break;
 			case "2"	: LicenseColor="黑"   ; break;
@@ -370,6 +388,9 @@ public static void main(String[] args) {
 	}
 
 	public void setClauseType(String clauseType) {
+		if(clauseType == null){
+			clauseType = "";
+		}
 		switch (clauseType) {
 			case "1"	: ClauseType="销售发票"   ; break;
 			case "2"	: ClauseType="法院调解书"   ; break;
@@ -389,6 +410,9 @@ public static void main(String[] args) {
 	}
 
 	public void setRunRegion(String runRegion) {
+		if(runRegion == null){
+			runRegion = "";
+		}
 		switch (runRegion) {
 			case "1"	: RunRegion="境内"   ; break;
 			case "2"	: RunRegion="本省内"   ; break;
@@ -396,7 +420,7 @@ public static void main(String[] args) {
 		}
 	}
 
-	public String getInsuredIdCard() {
+	/*public String getInsuredIdCard() {
 		return InsuredIdCard;
 	}
 
@@ -485,7 +509,7 @@ public static void main(String[] args) {
 			HolderMobile = holderMobile;
 		}
 	}
-
+*/
 	public String getRateFactor1() {
 		return RateFactor1;
 	}
@@ -523,6 +547,9 @@ public static void main(String[] args) {
 	}
 
 	public void setIsPublic(String isPublic) {
+		if(isPublic == null){
+			isPublic = "";
+		}
 		switch (isPublic) {
 			case "1"	: IsPublic="公车"   ; break;
 			case "2"	: IsPublic="私车"   ; break;

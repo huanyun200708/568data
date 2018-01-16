@@ -7,7 +7,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener> -->
-  <filter>
+<!--   <filter>
     <filter-name>struts2</filter-name>
     <filter-class>
 	        org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter         
@@ -22,7 +22,7 @@
     <url-pattern>/*</url-pattern>
     <url-pattern>*.action</url-pattern>
     <url-pattern>*.do</url-pattern>
-  </filter-mapping>
+  </filter-mapping> -->
 <!--   <filter>
     <filter-name>elementValidateFilter</filter-name>
     <filter-class>cn.com.hq.web.filter.ElementValidateFilter</filter-class>
@@ -38,6 +38,10 @@
   <servlet>
   	<servlet-name>Xiadan</servlet-name>
   	<servlet-class>com.weixinpay.Xiadan</servlet-class>
+  </servlet>
+   <servlet>
+  	<servlet-name>ChaBoShiCallBack</servlet-name>
+  	<servlet-class>com.weixinpay.ChaBoShiCallBack</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>Sign</servlet-name>
@@ -95,7 +99,7 @@
   	<servlet-name>PayRecord</servlet-name>
   	<servlet-class>com.weixinpay.PayRecord</servlet-class>
   </servlet>
-    <servlet>
+<!--     <servlet>
         <servlet-name>CXFService</servlet-name>
         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
     </servlet>
@@ -104,6 +108,7 @@
         <servlet-name>CXFService</servlet-name>
         <url-pattern>/webservice/*</url-pattern>
     </servlet-mapping>
+     -->
   <servlet-mapping>
   	<servlet-name>PaySuccess</servlet-name>
   	<url-pattern>/PaySuccess</url-pattern>
@@ -115,6 +120,10 @@
   <servlet-mapping>
   	<servlet-name>Xiadan</servlet-name>
   	<url-pattern>/xiadan</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  	<servlet-name>ChaBoShiCallBack</servlet-name>
+  	<url-pattern>/chaBoShiCallBack</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>Sign</servlet-name>

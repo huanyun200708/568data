@@ -12,11 +12,11 @@ import org.apache.log4j.Logger;
 
 import cn.com.hq.util.StringUtil;
 
-import com.weixinpay.model.BYJL;
 import com.weixinpay.model.CLZT;
 import com.weixinpay.model.CXJL;
 import com.weixinpay.model.OrderInfo;
 import com.weixinpay.model.TBXX;
+import com.weixinpay.model.WXJL;
 import com.weixinpay.service.PayService;
 
 /**
@@ -42,7 +42,7 @@ public class PaySuccess extends HttpServlet {
 			if("CLZT".equals(payType)){
 				 queryResult = CLZT.queryResult(request, orderId);
 			}else if("BYJL".equals(payType)){
-				queryResult = BYJL.queryResult(request, orderId);
+				queryResult = WXJL.queryResult(request, orderId);
 			}else if("CXJL".equals(payType)){
 				queryResult = CXJL.queryResult(request, orderId);
 			}else if("TBXX".equals(payType)){
@@ -87,7 +87,6 @@ public class PaySuccess extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 

@@ -14,14 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.com.hq.dao.Dao;
+import cn.com.hq.util.StringUtil;
+
 import com.alibaba.fastjson.JSONObject;
 import com.weixinpay.model.OrderInfo;
 import com.weixinpay.model.OrderInfoView;
-
-import cn.com.hq.dao.Dao;
-import cn.com.hq.util.PropertiesUtils;
-import cn.com.hq.util.StringUtil;
-import cn.com.hq.vo.OnboardInfoVO;
 
 public class PayService {
 	
@@ -126,7 +124,7 @@ public class PayService {
 				+ " FROM 568db.finance_pay t"
 				+ " where openid=? and (t.`isRefound` <> 'Y' OR t.`isRefound` IS NULL) ORDER BY t.`paytime` DESC";
 		Connection connection =  dao.getDBConnection();
-		OrderInfo order = new OrderInfo();
+		//OrderInfo order = new OrderInfo();
 		try {
 			PreparedStatement ps = connection.prepareStatement(sql);
 			ps.setString(1, openid);
@@ -312,8 +310,8 @@ public class PayService {
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
-			Date date = new Date();
-			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
+			/*Date date = new Date();
+			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");*/
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, out_trade_no);
 			result = ps.executeUpdate() > 0;
@@ -367,16 +365,28 @@ public class PayService {
 	}
 
 	public void updateFinancePayContent(OrderInfo order) {
-		boolean result = false;
 		String sql = "update 568db.finance_pay set content='"+order.getQueryResult()+"' where orderid=?";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
-			Date date = new Date();
-			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
+			/*Date date = new Date();
+			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");*/
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, order.getOut_trade_no());
-			result = ps.executeUpdate() > 0;
+			dao.closeStatement(ps);
+			Dao.releaseConnection(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateBYJLFinancePayContent(String vin,String resultStr) {
+		String sql = "update 568db.finance_pay set content='"+resultStr+"' where querycondition LIKE '&vin="+vin+"' and queryType='BYJL'";
+		Connection connection =  dao.getDBConnection();
+		PreparedStatement  ps;
+		try {
+			ps = connection.prepareStatement(sql);
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {
@@ -386,16 +396,12 @@ public class PayService {
 	}
 	
 	public void updateFinancePayReFound(OrderInfo order) {
-		boolean result = false;
 		String sql = "update 568db.finance_pay set isRefound='Y' where orderid=?";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
-			Date date = new Date();
-			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, order.getOut_trade_no());
-			result = ps.executeUpdate() > 0;
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {

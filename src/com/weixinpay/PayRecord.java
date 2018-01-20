@@ -3,7 +3,6 @@ package com.weixinpay;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,27 +16,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import cn.com.hq.util.PropertiesUtils;
-import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
 import cn.com.hq.util.StringUtil;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.weixinpay.common.Configure;
-import com.weixinpay.common.HttpRequest;
-import com.weixinpay.common.RandomStringGenerator;
-import com.weixinpay.common.Signature;
-import com.weixinpay.model.BYJL;
-import com.weixinpay.model.CLZT;
-import com.weixinpay.model.CXJL;
-import com.weixinpay.model.OrderInfo;
-import com.weixinpay.model.OrderReturnInfo;
-import com.weixinpay.model.SignInfo;
-import com.weixinpay.model.TBXX;
 import com.weixinpay.model.WXUser;
 import com.weixinpay.service.PayService;
 

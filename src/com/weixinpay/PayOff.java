@@ -16,7 +16,6 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import cn.com.hq.util.PropertiesUtils;
-import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.SSLUtil;
 import cn.com.hq.util.StringUtil;
 
@@ -120,8 +119,16 @@ public class PayOff extends HttpServlet {
 			}else if("BYJL".equals(payType)){
 				order.setBody("Vehicle maintenance record query");
 				String vin = request.getParameter("vin");
+				String enginno = request.getParameter("enginno");
+				String licenseplate = request.getParameter("licenseplate");
 				if(!StringUtil.isEmpty(vin)){
 					queryCondition = queryCondition +"&vin="+vin;
+				}
+				if(!StringUtil.isEmpty(vin)){
+					queryCondition = queryCondition +"&enginno="+enginno;
+				}
+				if(!StringUtil.isEmpty(vin)){
+					queryCondition = queryCondition +"&licenseplate="+licenseplate;
 				}
 				
 				BYJL.setOrderFee(request, order, memberLevel);

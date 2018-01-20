@@ -165,6 +165,9 @@ public class PayService {
 					if(content1.indexOf("&orderId=")>-1){
 						content1 = "正在查询";
 					}
+					if(content1.indexOf("查询失败")>-1){
+						content1 = "查询失败";
+					}
 				}else if("CXJL".equals(queryType)){
 					content = "出险信息查询	\n";
 					if(!StringUtil.isEmpty(querycondition) && querycondition.indexOf("licenseNo")>-1){

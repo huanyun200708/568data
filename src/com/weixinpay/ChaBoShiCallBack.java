@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import cn.com.hq.util.QueryAppKeyLib;
+
 import com.chaboshi.util.CBS;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,9 +35,10 @@ public class ChaBoShiCallBack extends HttpServlet {
 		System.out.println("result : "+result + "----message : "+message + "----orderid : "+orderid);
 		logger.info("result : "+result + "----message : "+message + "----orderid : "+orderid);
 		if(result!=null){
-			String callResult = CBS.getInstance("72029","d7174ad1310c8bc704ded21e26f5c25a").getNewReportJson(orderid);
+			String callResult = CBS.getInstance(QueryAppKeyLib.baoyangUserId,QueryAppKeyLib.baoyangUserKey).getNewReportJson(orderid);
 			System.out.println("callResult:\r\n"+callResult);
 			WXJL w = gson.fromJson(callResult, WXJL.class);
+			w.translateWBJL(w);
 			payService.updateBYJLFinancePayContent(w.getVin(),callResult);
 			logger.info("callResult:\r\n"+callResult);
 		}

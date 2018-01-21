@@ -1,7 +1,6 @@
 package com.weixinpay;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -124,16 +123,16 @@ public class PayOff extends HttpServlet {
 				if(!StringUtil.isEmpty(vin)){
 					queryCondition = queryCondition +"&vin="+vin;
 				}
-				if(!StringUtil.isEmpty(vin)){
+				if(!StringUtil.isEmpty(enginno)){
 					queryCondition = queryCondition +"&enginno="+enginno;
 				}
-				if(!StringUtil.isEmpty(vin)){
+				if(!StringUtil.isEmpty(licenseplate)){
 					queryCondition = queryCondition +"&licenseplate="+licenseplate;
 				}
 				
 				BYJL.setOrderFee(request, order, memberLevel);
 				
-				order.setQueryCondition("vin="+vin);
+				/*order.setQueryCondition(queryCondition);
 				Map<String,String> resultMap = payService.getBYJLqueryCondition(order.getOpenid(), vin);
 				//说明用户上次上次查询结果报告还没有生成，则不再重复付款
 				String condition = resultMap.get("condition");
@@ -145,7 +144,7 @@ public class PayOff extends HttpServlet {
 					response.getWriter().append(json.toJSONString());
 					return;
 				}
-				order.setQueryCondition("");
+				order.setQueryCondition("");*/
 ///order.setTotal_fee(1);//TODO Test C
 			}else if("CXJL".equals(payType)){
 				order.setBody("Chu xian ji lu");

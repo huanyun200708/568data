@@ -13,6 +13,8 @@ import cn.com.hq.util.QueryAppKeyLib;
 import cn.com.hq.util.StringUtil;
 
 import com.chaboshi.util.CBS;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.weixinpay.service.PayService;
 
 public class WXJL {
@@ -42,7 +44,7 @@ public class WXJL {
 	private String mainTainTimes;
 	private String lastRepairTime;
 	private String mileageEveryYear;
-	private String normalRepairRecords;
+	private List<WXJLRecord> normalRepairRecords;
 	private List<WXJLRecord> constructAnalyzeRepairRecords;
 	private List<WXJLRecord> componentAnalyzeRepairRecords;
 	private List<WXJLRecord> outsideAnalyzeRepairRecords;
@@ -173,6 +175,12 @@ public class WXJL {
 	}
 
 	public void setCarFireFlag(String carFireFlag) {
+		if(!StringUtil.isEmpty(carFireFlag)){
+			switch (carFireFlag) {
+				case "0":carFireFlag = "否";break;
+				default:carFireFlag = "是";break;
+			}
+		}
 		this.carFireFlag = carFireFlag;
 	}
 
@@ -187,6 +195,12 @@ public class WXJL {
 	}
 
 	public void setCarWaterFlag(String carWaterFlag) {
+		if(!StringUtil.isEmpty(carWaterFlag)){
+			switch (carWaterFlag) {
+				case "0":carWaterFlag = "否";break;
+				default:carWaterFlag = "是";break;
+			}
+		}
 		this.carWaterFlag = carWaterFlag;
 	}
 
@@ -201,6 +215,12 @@ public class WXJL {
 	}
 
 	public void setCarComponentRecordsFlag(String carComponentRecordsFlag) {
+		if(!StringUtil.isEmpty(carComponentRecordsFlag)){
+			switch (carComponentRecordsFlag) {
+				case "0":carComponentRecordsFlag = "否";break;
+				default:carComponentRecordsFlag = "是";break;
+			}
+		}
 		this.carComponentRecordsFlag = carComponentRecordsFlag;
 	}
 
@@ -215,6 +235,12 @@ public class WXJL {
 	}
 
 	public void setCarConstructRecordsFlag(String carConstructRecordsFlag) {
+		if(!StringUtil.isEmpty(carConstructRecordsFlag)){
+			switch (carConstructRecordsFlag) {
+				case "0":carConstructRecordsFlag = "否";break;
+				default:carConstructRecordsFlag = "是";break;
+			}
+		}
 		this.carConstructRecordsFlag = carConstructRecordsFlag;
 	}
 
@@ -229,6 +255,12 @@ public class WXJL {
 	}
 
 	public void setCarOutsideRecordsFlag(String carOutsideRecordsFlag) {
+		if(!StringUtil.isEmpty(carOutsideRecordsFlag)){
+			switch (carOutsideRecordsFlag) {
+				case "0":carOutsideRecordsFlag = "否";break;
+				default:carOutsideRecordsFlag = "是";break;
+			}
+		}
 		this.carOutsideRecordsFlag = carOutsideRecordsFlag;
 	}
 
@@ -243,6 +275,13 @@ public class WXJL {
 	}
 
 	public void setMileageIsNormalFlag(String mileageIsNormalFlag) {
+		
+		if(!StringUtil.isEmpty(mileageIsNormalFlag)){
+			switch (mileageIsNormalFlag) {
+				case "0":mileageIsNormalFlag = "否";break;
+				default:mileageIsNormalFlag = "是";break;
+			}
+		}
 		this.mileageIsNormalFlag = mileageIsNormalFlag;
 	}
 
@@ -250,6 +289,7 @@ public class WXJL {
 		if(!StringUtil.isEmpty(mileageEstimate)){
 			switch (mileageEstimate) {
 				case "0":mileageEstimate = "没有估出来";break;
+				case "":mileageEstimate = "没有估出来";break;
 				default:break;
 			}
 		}
@@ -257,6 +297,12 @@ public class WXJL {
 	}
 
 	public void setMileageEstimate(String mileageEstimate) {
+		if(!StringUtil.isEmpty(mileageEstimate)){
+			switch (mileageEstimate) {
+				case "0":mileageEstimate = "没有估出来";break;
+				default:break;
+			}
+		}
 		this.mileageEstimate = mileageEstimate;
 	}
 
@@ -292,14 +338,15 @@ public class WXJL {
 		this.mileageEveryYear = mileageEveryYear;
 	}
 
-	public String getNormalRepairRecords() {
+
+
+	public List<WXJLRecord> getNormalRepairRecords() {
 		return normalRepairRecords;
 	}
 
-	public void setNormalRepairRecords(String normalRepairRecords) {
+	public void setNormalRepairRecords(List<WXJLRecord> normalRepairRecords) {
 		this.normalRepairRecords = normalRepairRecords;
 	}
-
 
 	public List<WXJLRecord> getConstructAnalyzeRepairRecords() {
 		return constructAnalyzeRepairRecords;
@@ -364,6 +411,7 @@ public class WXJL {
 	}
 
 	public static String queryResult(HttpServletRequest request, String orderId) {
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").enableComplexMapKeySerialization().disableHtmlEscaping().create();
 		OrderInfo order = payService.getQueryOrderByorderId(orderId);
 		String vin = request.getParameter("vin");
 		String enginno = request.getParameter("enginno") == null?"":request.getParameter("enginno");
@@ -379,14 +427,19 @@ public class WXJL {
 			return "{\"errorMessage\":\"" +m1.get("Message") + "\",\"success\":false}";
 		}
 		String s =  CBS.getInstance(QueryAppKeyLib.baoyangUserId,QueryAppKeyLib.baoyangUserKey).getBuyReport(vin, enginno,licenseplate, QueryAppKeyLib.baoyangCallBackUrl);
-		Map<String,String> m = JsonUtils.json2Map(s);
-		if(!"0".equals(m.get("Code"))){
+		//String s =  DemoData.WBJL;//测试代码
+		s = s.replaceAll("\":\\s*,", "\":\\\"\\\",");
+		WXJL w = gson.fromJson(s, WXJL.class);
+		if(!"0".equals(w.getCode()) && !"".equals(w.getCode())){
 			order.setQueryResult("查询失败");
 			payService.updateFinancePayContent(order);
 			return "{\"errorMessage\":\"" +m1.get("Message") + "\",\"success\":false}";
 		}else{
+			logger.info("BYJL-pre-QueryResult:\r\n" + gson.toJson(w));
 			order.setQueryResult("&orderId="+orderId);
-			return s;
+			payService.updateFinancePayContent(order);//测试代码
+			//order.setQueryResult("&orderId="+orderId);
+			return "{\"errorMessage\":\"报告生成中，耐心等待1~3分钟，请在记录里查看记录详情\",\"submitOrder\":1}";
 		}
 // System.out.println("s:\r\n"+s);
 		// 设置请求器的配置
@@ -443,5 +496,40 @@ public class WXJL {
 		}
 
 		return queryResult;*/
+	}
+	
+	public WXJL translateWBJL(WXJL w){
+		w.setBrand(w.getBrand());
+		w.setCarComponentRecordsFlag(w.getCarComponentRecordsFlag());
+		w.setCarConstructRecordsFlag(w.getCarConstructRecordsFlag());
+		w.setCarFireFlag(w.getCarFireFlag());
+		w.setCarOutsideRecordsFlag(w.getCarOutsideRecordsFlag());
+		w.setCarType(w.getCarType());
+		w.setCarWaterFlag(w.getCarWaterFlag());
+		w.setCode(w.getCode());
+		w.setComponentAnalyzeRepairRecords(w.getComponentAnalyzeRepairRecords());
+		w.setConstructAnalyzeRepairRecords(w.getConstructAnalyzeRepairRecords());
+		w.setDisplacement(w.getDisplacement());
+		w.setEffluentStandard(w.getEffluentStandard());
+		w.setLastMainTainTime(w.getLastMainTainTime());
+		w.setLastRepairTime(w.getLastRepairTime());
+		w.setMainTainTimes(w.getMainTainTimes());
+		w.setMakeDate(w.getMakeDate());
+		w.setMakeReportDate(w.getMakeReportDate());
+		w.setManufacturer(w.getManufacturer());
+		w.setMessage(w.getMessage());
+		w.setMileageEstimate(w.getMileageEstimate());
+		w.setMileageEveryYear(w.getMileageEveryYear());
+		w.setMileageIsNormalFlag(w.getMileageIsNormalFlag());
+		w.setModelName(w.getModelName());
+		w.setNormalRepairRecords(w.getNormalRepairRecords());
+		w.setOutsideAnalyzeRepairRecords(w.getOutsideAnalyzeRepairRecords());
+		w.setProductionArea(w.getProductionArea());
+		w.setReportNo(w.getReportNo());
+		w.setScore(w.getScore());
+		w.setSeriesName(w.getSeriesName());
+		w.setTransmissionType(w.getTransmissionType());
+		w.setVin(w.getVin());
+		return w;
 	}
 }

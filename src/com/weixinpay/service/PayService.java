@@ -161,6 +161,7 @@ public class PayService {
 					content = "维保信息查询	\n";
 					if(!StringUtil.isEmpty(querycondition)){
 						content = content + "车架号:" +querycondition.replace("&vin=", "");
+						content = content.replaceAll("&.*", "");
 					}
 					if(content1.indexOf("&orderId=")>-1){
 						content1 = "正在查询";
@@ -376,6 +377,8 @@ public class PayService {
 			DateFormat format2 = new SimpleDateFormat("yyyyMMddHHmmss");*/
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, order.getOut_trade_no());
+			int result = ps.executeUpdate();
+			System.out.println(result);
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {
@@ -385,11 +388,13 @@ public class PayService {
 	}
 	
 	public void updateBYJLFinancePayContent(String vin,String resultStr) {
-		String sql = "update 568db.finance_pay set content='"+resultStr+"' where querycondition LIKE '&vin="+vin+"' and queryType='BYJL'";
+		String sql = "update 568db.finance_pay set content='"+resultStr+"' where querycondition LIKE '&vin="+vin+"%' and queryType='BYJL'";
 		Connection connection =  dao.getDBConnection();
 		PreparedStatement  ps;
 		try {
 			ps = connection.prepareStatement(sql);
+			int result = ps.executeUpdate();
+			System.out.println(result);
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {
@@ -405,6 +410,8 @@ public class PayService {
 		try {
 			ps = connection.prepareStatement(sql);
 			ps.setString(1, order.getOut_trade_no());
+			int result = ps.executeUpdate();
+			System.out.println(result);
 			dao.closeStatement(ps);
 			Dao.releaseConnection(connection);
 		} catch (SQLException e) {

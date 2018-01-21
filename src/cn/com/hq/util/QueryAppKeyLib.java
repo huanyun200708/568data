@@ -18,7 +18,7 @@ public class QueryAppKeyLib {
 	
 	public static String baoyangUserId = "72029";
 	public static String baoyangUserKey = "d7174ad1310c8bc704ded21e26f5c25a";
-	public static String baoyangCallBackUrl = "http://twvv6x.natappfree.cc/568data/chaBoShiCallBack";
+	public static String baoyangCallBackUrl = "http://x8s8ve.natappfree.cc/568data/chaBoShiCallBack";
 	
 	/**出险理赔查询*/
 	public static String chuxianjiluQueryAppKey = "083c11340dc623d82d07bb6b97f51bcf";

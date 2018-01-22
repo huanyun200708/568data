@@ -420,6 +420,8 @@ public class WXJL {
 		// order.setOpenid("oUm4A0UA7pG6t-TQUVsLQqRppNl8");
 		//先检查一下品牌是否支持查询
 		String s1 =  CBS.getInstance(QueryAppKeyLib.baoyangUserId,QueryAppKeyLib.baoyangUserKey).getCheckBrand(vin);
+		System.out.println(s1);
+		logger.info("BYJL-pre-QueryResult1:\r\n" + s1);
 		Map<String,String> m1 = JsonUtils.json2Map(s1);
 		if(!"1106".equals(m1.get("Code"))){
 			order.setQueryResult("查询失败");
@@ -431,11 +433,12 @@ public class WXJL {
 		s = s.replaceAll("\":\\s*,", "\":\\\"\\\",");
 		WXJL w = gson.fromJson(s, WXJL.class);
 		if(!"0".equals(w.getCode()) && !"".equals(w.getCode())){
+			logger.info("BYJL-pre-QueryResult2:\r\n" + w.getMessage());
 			order.setQueryResult("查询失败");
 			payService.updateFinancePayContent(order);
-			return "{\"errorMessage\":\"" +m1.get("Message") + "\",\"success\":false}";
+			return "{\"errorMessage\":\"查询失败\",\"success\":false}";
 		}else{
-			logger.info("BYJL-pre-QueryResult:\r\n" + gson.toJson(w));
+			logger.info("BYJL-pre-QueryResult2:\r\n" + gson.toJson(w));
 			order.setQueryResult("&orderId="+orderId);
 			payService.updateFinancePayContent(order);//测试代码
 			//order.setQueryResult("&orderId="+orderId);
